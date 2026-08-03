@@ -1,0 +1,207 @@
+'use client';
+
+import { useState, useRef, useEffect } from 'react';
+import { X } from 'lucide-react';
+import Navbar from '../components/Navbar';
+import HeroSection from '../components/HeroSection';
+import SectionCards, {
+  CARDS,
+  SectionId,
+  EducationExpanded,
+  ExperienceExpanded,
+  SkillsExpanded,
+} from '../components/SectionCards';
+import Footer from '../components/Footer';
+import DocumentModal from '../components/DocumentModal';
+
+interface ExpandedBodyProps {
+  active: SectionId | null;
+  onOpenDoc: (title: string, url: string) => void;
+}
+
+/* Map section IDs → expanded panel */
+function ExpandedBody({ active, onOpenDoc }: ExpandedBodyProps) {
+  if (active === 'education')  return <EducationExpanded onOpenDoc={onOpenDoc} />;
+  if (active === 'experience') return <ExperienceExpanded onOpenDoc={onOpenDoc} />;
+  if (active === 'skills')     return <SkillsExpanded />;
+  return null;
+}
+
+export default function Home() {
+  const [active, setActive] = useState<SectionId | null>(null);
+  const [docModal, setDocModal] = useState<{ isOpen: boolean; title: string; url: string }>({
+    isOpen: false,
+    title: '',
+    url: '',
+  });
+
+  const scrollableRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  /* Keep last-active so the panel stays visible during close animation */
+  const lastActive = useRef<SectionId | null>(null);
+  if (active) lastActive.current = active;
+
+  const displayed     = active ?? lastActive.current;
+  const displayedCard = CARDS.find(c => c.id === displayed);
+
+  const close = () => setActive(null);
+
+  const handleSelectCard = (id: SectionId) => {
+    setActive(id);
+    if (scrollableRef.current) {
+      scrollableRef.current.scrollTop = 0;
+    }
+    // Smooth scroll to top of overlay on mobile
+    setTimeout(() => {
+      if (window.innerWidth < 768 && overlayRef.current) {
+        overlayRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 60);
+  };
+
+  /* Prevent accidental instant close on mouse leave (ignored on touch screens) */
+  const handleMouseLeaveOverlay = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (typeof window !== 'undefined' && !window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      return;
+    }
+    const rect = e.currentTarget.getBoundingClientRect();
+    const { clientX, clientY } = e;
+    // Only close if mouse truly exited the bounding box
+    if (
+      clientX <= rect.left + 2 ||
+      clientX >= rect.right - 2 ||
+      clientY <= rect.top + 2 ||
+      clientY >= rect.bottom - 2
+    ) {
+      setActive(null);
+    }
+  };
+
+  const handleOpenDoc = (title: string, url: string) => {
+    setDocModal({ isOpen: true, title, url });
+  };
+
+  const handleCloseDoc = () => {
+    setDocModal(prev => ({ ...prev, isOpen: false }));
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+
+      <main className="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+
+        {/* CONTENT ZONE */}
+        <div style={{ position: 'relative' }}>
+
+          {/* Hero */}
+          <HeroSection onOpenDoc={handleOpenDoc} />
+
+          {/* Gap */}
+          <div className="h-4 sm:h-6" />
+
+          {/* Three stub cards */}
+          <SectionCards active={active} onHover={handleSelectCard} />
+
+          {/* ── Full-height expanded overlay ───────────────── */}
+          <div
+            ref={overlayRef}
+            className={`expanded-overlay ${active ? 'visible' : ''}`}
+            onMouseLeave={handleMouseLeaveOverlay}
+          >
+            {displayedCard && (
+              <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+
+                {/* ── Header bar ─────────────────────────── */}
+                <div className="p-3.5 sm:p-5 border-b border-[var(--border)] shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[var(--card)]">
+                  
+                  {/* Left: Icon + Title & Subtitle */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+                    <div className={displayedCard.stubAccent === 'violet' ? 'icon-badge-violet' : 'icon-badge-coral'} style={{ flexShrink: 0, width: 36, height: 36, borderRadius: 10 }}>
+                      <displayedCard.icon className="w-4.5 h-4.5" />
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{ color: 'var(--text-title)', fontSize: 17, fontWeight: 800, lineHeight: 1.2 }} className="sm:text-lg">
+                        {displayedCard.title}
+                      </p>
+                      <p style={{ color: 'var(--text-muted)', fontSize: 13, marginTop: 2 }} className="truncate">
+                        {displayedCard.tagline}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Right (Inline on Laptop / Below Title on Mobile): 3 switcher pills + Close X button */}
+                  <div className="flex items-center justify-between sm:justify-end gap-1.5 sm:gap-2 shrink-0 flex-nowrap w-full sm:w-auto pt-0.5 sm:pt-0">
+                    
+                    {/* 3 Section Switcher Pills inline */}
+                    <div className="flex items-center gap-1.5 sm:gap-2 flex-nowrap">
+                      {CARDS.map(c => (
+                        <button
+                          key={c.id}
+                          onMouseEnter={() => {
+                            if (typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                              setActive(c.id);
+                            }
+                          }}
+                          onClick={() => handleSelectCard(c.id)}
+                          style={{
+                            padding: '4px 10px', borderRadius: 999, fontSize: 12, fontWeight: 600,
+                            cursor: 'pointer', border: 'none', transition: 'all 0.2s', whiteSpace: 'nowrap',
+                            background: c.id === (active ?? lastActive.current)
+                              ? 'var(--violet)'
+                              : 'var(--violet-soft)',
+                            color: c.id === (active ?? lastActive.current)
+                              ? '#fff'
+                              : 'var(--violet)',
+                          }}
+                          className="sm:!px-4 sm:!py-1.5 sm:!text-xs"
+                        >
+                          {c.title}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Close / X button inline on the right */}
+                    <button
+                      onClick={close}
+                      aria-label="Close panel"
+                      style={{
+                        width: 30, height: 30, borderRadius: 8, flexShrink: 0,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: 'rgba(0,0,0,0.05)', border: '1px solid var(--border)',
+                        color: 'var(--text-muted)', cursor: 'pointer',
+                      }}
+                      className="hover:bg-coral-soft hover:text-coral hover:border-coral sm:!w-8 sm:!h-8"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+
+                  </div>
+
+                </div>
+
+                {/* ── Scrollable body ─────────────────────── */}
+                <div ref={scrollableRef} style={{ flex: 1, overflow: 'auto' }}>
+                  <ExpandedBody active={active ?? lastActive.current} onOpenDoc={handleOpenDoc} />
+                </div>
+
+              </div>
+            )}
+          </div>
+
+        </div>
+      </main>
+
+      <Footer />
+
+      {/* ── Document Modal Popup ── */}
+      <DocumentModal
+        isOpen={docModal.isOpen}
+        onClose={handleCloseDoc}
+        title={docModal.title}
+        url={docModal.url}
+      />
+    </div>
+  );
+}

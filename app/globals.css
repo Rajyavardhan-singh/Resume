@@ -1,0 +1,327 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── DESIGN TOKENS ───────────────────────────── */
+:root {
+  --font-sans: 'Inter', system-ui, sans-serif;
+
+  --bg:            #EDEDF0;
+  --card:          #FFFFFF;
+  --text-title:    #14151A;
+  --text-muted:    #6B7280;
+  --text-faint:    #A0A9B4;
+  --border:        rgba(0,0,0,0.07);
+  --violet:        #6C4CF5;
+  --violet-soft:   rgba(108,76,245,0.10);
+  --coral:         #F14E3D;
+  --coral-soft:    rgba(241,78,61,0.10);
+
+  --shadow-sm:
+    0 1px 3px rgba(0,0,0,0.07),
+    0 2px 8px rgba(0,0,0,0.05);
+  --shadow-card:
+    0 4px 6px  rgba(0,0,0,0.06),
+    0 10px 20px rgba(0,0,0,0.05),
+    0 20px 40px rgba(0,0,0,0.04);
+  --shadow-lift:
+    0 8px 16px  rgba(0,0,0,0.10),
+    0 24px 48px rgba(0,0,0,0.10),
+    0 48px 80px rgba(0,0,0,0.08);
+}
+
+.dark {
+  --bg:            #0d0e12;
+  --card:          #15161d;
+  --text-title:    #F2F2F5;
+  --text-muted:    #9A9AA5;
+  --text-faint:    #60606A;
+  --border:        rgba(139, 92, 246, 0.28);
+  --violet:        #8b5cf6;
+  --violet-soft:   rgba(139, 92, 246, 0.15);
+  --coral:         #F05A48;
+  --coral-soft:    rgba(240, 90, 72, 0.12);
+
+  --shadow-sm:
+    0 1px 3px rgba(0,0,0,0.3),
+    0 2px 8px rgba(0,0,0,0.2);
+  --shadow-card:
+    0 4px 6px  rgba(0,0,0,0.4),
+    0 10px 20px rgba(0,0,0,0.3),
+    0 0 0 1px rgba(139, 92, 246, 0.22);
+  --shadow-lift:
+    0 12px 28px rgba(0, 0, 0, 0.6),
+    0 24px 48px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(168, 85, 247, 0.45),
+    0 0 30px rgba(139, 92, 246, 0.2);
+}
+
+/* ─── BASE ────────────────────────────────────── */
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--bg);
+  color: var(--text-title);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* ─── CARD SURFACE ────────────────────────────── */
+.card-surface {
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+}
+
+/* ─── STUB CARD GRID ──────────────────────────── */
+.section-cards-stub-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  transition: opacity 0.25s ease-out;
+}
+
+@media (min-width: 768px) {
+  .section-cards-stub-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+}
+
+.section-cards-stub-row.dimmed {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.stub-card {
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 28px 24px;
+  cursor: pointer;
+  transition:
+    box-shadow 0.25s ease-out,
+    transform 0.25s ease-out,
+    border-color 0.25s ease-out;
+}
+
+.stub-card:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-3px);
+}
+
+/* ─── EXPANDED OVERLAY ────────────────────────── */
+/* Sits in page.tsx absolute wrapper that covers hero + cards */
+.expanded-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  border-radius: 24px;
+  background: var(--card);
+  box-shadow: var(--shadow-lift);
+  border: 1px solid var(--border);
+  overflow: hidden;
+
+  opacity: 0;
+  transform: scale(0.97) translateY(8px);
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease-out,
+    transform 0.3s ease-out;
+}
+
+.expanded-overlay.visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+
+/* ─── DARK MODE SMOOTH AMBIENT GRADIENT BORDERS ─── */
+.dark .hero-card,
+.dark .stub-card,
+.dark .expanded-overlay,
+.dark .card-surface,
+.dark .navbar {
+  border: 1px solid rgba(139, 92, 246, 0.32) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.dark .stub-card:hover {
+  border-color: rgba(168, 85, 247, 0.65) !important;
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.6),
+    0 0 25px rgba(139, 92, 246, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+}
+
+/* ─── ACCENT ELEMENTS ─────────────────────────── */
+.accent-violet-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--violet-soft);
+  color: var(--violet);
+  border-radius: 999px;
+  padding: 5px 13px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.accent-coral-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--coral-soft);
+  color: var(--coral);
+  border-radius: 999px;
+  padding: 5px 13px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.icon-badge-violet {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--violet-soft);
+  color: var(--violet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon-badge-coral {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--coral-soft);
+  color: var(--coral);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ─── SKILL TAGS ──────────────────────────────── */
+.skill-tag {
+  display: inline-block;
+  padding: 5px 11px;
+  border-radius: 6px;
+  background: var(--violet-soft);
+  color: var(--violet);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.skill-tag-neutral {
+  display: inline-block;
+  padding: 5px 11px;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.04);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.dark .skill-tag-neutral {
+  background: rgba(255,255,255,0.05);
+}
+
+/* ─── TIMELINE DOT ────────────────────────────── */
+.timeline-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--violet);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+/* ─── NAVBAR ──────────────────────────────────── */
+.navbar {
+  background: rgba(237,237,240,0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+
+.dark .navbar {
+  background: rgba(18,18,20,0.90);
+}
+
+/* ─── HERO CARD ───────────────────────────────── */
+.hero-card {
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+}
+
+/* ─── LOADING SKELETON ────────────────────────── */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.96) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1) translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(0,0,0,0.06) 25%,
+    rgba(0,0,0,0.12) 50%,
+    rgba(0,0,0,0.06) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite linear;
+}
+
+.dark .skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.05) 25%,
+    rgba(255,255,255,0.10) 50%,
+    rgba(255,255,255,0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite linear;
+}
+
+/* ─── MOBILE ──────────────────────────────────── */
+@media (max-width: 768px) {
+  .section-cards-stub-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .expanded-overlay { border-radius: 20px; }
+}
+
+/* ─── SCROLLBAR ───────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.14); border-radius: 9999px; }
+.dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.09); }
+::-webkit-scrollbar-thumb:hover { background: var(--violet); }
+
+/* ─── PRINT ───────────────────────────────────── */
+@media print {
+  header, footer, button, .no-print { display: none !important; }
+  body { background: white !important; color: black !important; }
+}
