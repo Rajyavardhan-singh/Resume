@@ -16,6 +16,7 @@ export interface SailingExperience {
   type: string;
   rank: string;
   period: string;
+  description?: string;
   highlights: string[];
   docUrl?: string;
   appraisalUrl?: string;
