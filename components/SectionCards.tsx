@@ -192,7 +192,9 @@ export function ExperienceExpanded({ onOpenDoc }: ExpandedProps) {
             {exp.period}
           </div>
 
-          <p style={{ color: 'var(--text-muted)', fontSize: 14, lineHeight: 1.65, marginBottom: 12 }}>{exp.description}</p>
+          {exp.description && (
+            <p style={{ color: 'var(--text-muted)', fontSize: 14, lineHeight: 1.65, marginBottom: 12 }}>{exp.description}</p>
+          )}
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
             {exp.highlights.map(h => (
