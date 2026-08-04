@@ -149,7 +149,7 @@ export const itSkills: string[] = [
 ];
 
 export const activeLearningSkills: string[] = [
-  "Spanish (Español) — Currently Learning 🇲🇽🇪🇸",
+  // "Spanish (Español) — Currently Learning 🇲🇽🇪🇸",
   "Advanced Automation & PLC Logic",
   "Cloud Architecture & Microservices",
   "Maritime Cyber Security Protocols",
