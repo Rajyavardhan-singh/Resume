@@ -311,6 +311,36 @@ body {
     gap: 16px;
   }
   .expanded-overlay { border-radius: 20px; }
+  
+  .mobile-text-justify {
+    text-align: justify;
+    text-justify: inter-word;
+  }
+}
+
+/* ─── CREDENTIAL CHIPS RESPONSIVE BREAKPOINTS ──── */
+.credential-chips-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+@media (min-width: 440px) {
+  .credential-chips-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .credential-chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+  .credential-chips-row > div {
+    width: auto !important;
+  }
 }
 
 /* ─── SCROLLBAR ───────────────────────────────── */
