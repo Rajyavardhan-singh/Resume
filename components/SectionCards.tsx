@@ -377,7 +377,6 @@ export function SkillsExpanded() {
             ))}
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-            <span className="accent-violet-badge" style={{ fontSize: 12, padding: '3px 10px' }}>Español 🇪🇸</span>
             <span className="accent-coral-badge" style={{ fontSize: 12, padding: '3px 10px' }}>Constantly Evolving</span>
             <span className="skill-tag-neutral" style={{ fontSize: 12 }}>Self-Driven</span>
           </div>
