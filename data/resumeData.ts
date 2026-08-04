@@ -60,7 +60,7 @@ export const personalInfo: PersonalInfo = {
   email: "rajyavardhansr@gmail.com",
   phone: "+91 6265174151",
   location: "India / Overseas Sailing",
-  summary: "A  professional with experience across both field and desk roles — combining experience of marine electrical systems on ocean-going container vessels with modern Technology and software development.",
+  summary: "Professionalism with experience across both field and desk roles — combining experience of marine electrical systems on ocean-going container vessels with modern Technology and software development.",
 };
 
 export const sailingExperience: SailingExperience[] = [
@@ -106,7 +106,7 @@ export const internships: Internship[] = [
     period: "July 2021",
     role: "Electrical Engineering Intern",
     description: "Gained hands-on experience in electrical switchgear assembly, testing, industrial panel wiring, and control circuits.",
-    docUrl: "https://drive.google.com/file/d/12JNQXGa_oGV2NKCmZINGYtf5zuYWAYRI/view?usp=sharing"
+    docUrl: "https://drive.google.com/file/d/1-a9I2xzbXn_ArdYguaL8x3YYgcb12QsY/view?usp=sharing"
   }
 ];
 
