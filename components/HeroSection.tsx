@@ -75,10 +75,19 @@ function IconButton({ icon, title, onClick, href, color, hoverBg }: IconButtonPr
 }
 
 /* ── Copy icon button with feedback ───────────── */
-function CopyIconButton({ text, title = 'Copy' }: { text: string; title?: string }) {
+interface CopyIconButtonProps {
+  text: string;
+  title?: string;
+  color?: string;
+  hoverBg?: string;
+  onCopyClick?: () => void;
+}
+
+function CopyIconButton({ text, title = 'Copy', color, hoverBg, onCopyClick }: CopyIconButtonProps) {
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = async () => {
+  const handleCopy = async (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
     try {
       await navigator.clipboard.writeText(text);
     } catch {
@@ -90,6 +99,9 @@ function CopyIconButton({ text, title = 'Copy' }: { text: string; title?: string
       document.body.removeChild(el);
     }
     setCopied(true);
+    if (onCopyClick) {
+      onCopyClick();
+    }
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -98,8 +110,8 @@ function CopyIconButton({ text, title = 'Copy' }: { text: string; title?: string
       icon={copied ? <Check className="w-3.5 h-3.5" style={{ color: '#22c55e' }} /> : <Copy className="w-3.5 h-3.5" />}
       title={copied ? 'Copied to clipboard!' : title}
       onClick={handleCopy}
-      color={copied ? '#22c55e' : 'var(--text-muted)'}
-      hoverBg={copied ? 'rgba(34, 197, 94, 0.15)' : undefined}
+      color={copied ? '#22c55e' : (color ?? 'var(--text-muted)')}
+      hoverBg={copied ? 'rgba(34, 197, 94, 0.15)' : hoverBg}
     />
   );
 }
@@ -348,7 +360,7 @@ export default function HeroSection({ onOpenDoc }: HeroSectionProps) {
             </div>
 
             {/* Summary */}
-            <p style={{ color: 'var(--text-muted)', fontSize: 14, lineHeight: 1.6, maxWidth: 640 }} className="sm:text-base">
+            <p style={{ color: 'var(--text-muted)', fontSize: 14, lineHeight: 1.6, maxWidth: 640 }} className="sm:text-base mobile-text-justify">
               {personalInfo.summary}
             </p>
 
@@ -360,17 +372,18 @@ export default function HeroSection({ onOpenDoc }: HeroSectionProps) {
             >
 
               {/* Base row of resting chips */}
-              <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+              <div className="credential-chips-row">
 
-                {/* INDOS Number (Simple Copy Chip) */}
+                {/* INDOS Number (Simple Copy Chip - No Expanded View) */}
                 <div
                   style={{
-                    display: 'inline-flex',
+                    display: 'flex',
                     alignItems: 'center',
-                    gap: 6,
-                    padding: '4px 10px',
+                    justifyContent: 'space-between',
+                    gap: 4,
+                    padding: '4px 8px',
                     borderRadius: 14,
-                    fontSize: 12.5,
+                    fontSize: 12,
                     fontWeight: 600,
                     background: 'var(--card)',
                     border: '1px solid var(--border)',
@@ -378,26 +391,35 @@ export default function HeroSection({ onOpenDoc }: HeroSectionProps) {
                     color: 'var(--text-title)',
                     height: 34,
                   }}
-                  className="select-none shrink-0"
+                  className="w-full select-none shrink-0"
                 >
-                  <span style={{ color: 'var(--violet)', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-                    <Compass className="w-3.5 h-3.5" />
-                  </span>
-                  <span style={{ color: 'var(--violet)', fontWeight: 700, flexShrink: 0 }}>
-                    INDOS:
-                  </span>
-                  <span style={{ fontWeight: 700, flexShrink: 0 }} className="select-all">
-                    24EM1741
-                  </span>
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span style={{ color: 'var(--violet)', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+                      <Compass className="w-3.5 h-3.5" />
+                    </span>
+                    <span style={{ color: 'var(--violet)', fontWeight: 700, flexShrink: 0 }}>
+                      INDOS:
+                    </span>
+                    <span style={{ fontWeight: 700 }} className="select-all truncate">
+                      24EM1741
+                    </span>
+                  </div>
 
-                  <div style={{ width: 1, height: 14, background: 'var(--border)', margin: '0 2px' }} />
-
-                  <CopyIconButton text="24EM1741" title="Copy INDOS number" />
+                  <div className="flex items-center gap-1 shrink-0">
+                    <div style={{ width: 1, height: 14, background: 'var(--border)' }} />
+                    <CopyIconButton
+                      text="24EM1741"
+                      title="Copy INDOS number"
+                      color="var(--violet)"
+                      hoverBg="var(--violet-soft)"
+                    />
+                  </div>
                 </div>
 
-                {/* CDC, Passport, SID stub chips */}
+                {/* CDC, Passport, SID stub chips (With Hover/Click Expanded View) */}
                 {MARITIME_CREDENTIALS.map(cred => {
                   const isActive = activeCredId === cred.id;
+                  const chipHoverBg = cred.id === 'sid' ? 'rgba(22, 163, 74, 0.15)' : cred.id === 'passport' ? 'var(--coral-soft)' : 'var(--violet-soft)';
                   return (
                     <div
                       key={cred.id}
@@ -411,12 +433,13 @@ export default function HeroSection({ onOpenDoc }: HeroSectionProps) {
                         setActiveCredId(isActive ? null : cred.id);
                       }}
                       style={{
-                        display: 'inline-flex',
+                        display: 'flex',
                         alignItems: 'center',
-                        gap: 6,
-                        padding: '4px 10px',
+                        justifyContent: 'space-between',
+                        gap: 4,
+                        padding: '4px 8px',
                         borderRadius: 14,
-                        fontSize: 12.5,
+                        fontSize: 12,
                         fontWeight: 600,
                         background: 'var(--card)',
                         border: '1px solid var(--border)',
@@ -428,25 +451,33 @@ export default function HeroSection({ onOpenDoc }: HeroSectionProps) {
                         visibility: isActive ? 'hidden' : 'visible',
                         opacity: isActive ? 0 : 1,
                       }}
-                      className="select-none shrink-0 group hover:border-[var(--violet)]"
+                      className="w-full select-none shrink-0 group hover:border-[var(--violet)]"
                     >
-                      <span style={{ color: cred.accentColor, display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-                        {cred.icon}
-                      </span>
-                      <span style={{ color: cred.accentColor, fontWeight: 700, flexShrink: 0 }}>
-                        {cred.label}:
-                      </span>
-                      <span style={{ fontWeight: 700, flexShrink: 0 }} className="select-all">
-                        {cred.number}
-                      </span>
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <span style={{ color: cred.accentColor, display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+                          {cred.icon}
+                        </span>
+                        <span style={{ color: cred.accentColor, fontWeight: 700, flexShrink: 0 }}>
+                          {cred.label}:
+                        </span>
+                        <span style={{ fontWeight: 700 }} className="select-all truncate">
+                          {cred.number}
+                        </span>
+                      </div>
 
-                      <div style={{ width: 1, height: 14, background: 'var(--border)', margin: '0 2px' }} />
-
-                      <CopyIconButton text={cred.number} title={`Copy ${cred.label} number`} />
+                      <div className="flex items-center gap-1 shrink-0">
+                        <div style={{ width: 1, height: 14, background: 'var(--border)' }} />
+                        <CopyIconButton
+                          text={cred.number}
+                          title={`Copy ${cred.label} number`}
+                          color={cred.accentColor}
+                          hoverBg={chipHoverBg}
+                          onCopyClick={() => setActiveCredId(cred.id)}
+                        />
+                      </div>
                     </div>
                   );
                 })}
-
               </div>
 
               {/* ── Centered Expanded Tile Overlay (Responsive for mobile screens) ── */}
