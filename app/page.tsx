@@ -86,6 +86,53 @@ export default function Home() {
     setDocModal(prev => ({ ...prev, isOpen: false }));
   };
 
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const touchEndRef   = useRef<{ x: number; y: number } | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    touchStartRef.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+    };
+    touchEndRef.current = null;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    touchEndRef.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+    };
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartRef.current || !touchEndRef.current) return;
+    const diffX = touchStartRef.current.x - touchEndRef.current.x;
+    const diffY = touchStartRef.current.y - touchEndRef.current.y;
+
+    // Ensure horizontal swipe is dominant and exceeds 40px threshold
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+      const sectionOrder: SectionId[] = ['education', 'experience', 'skills'];
+      const currentSection = active ?? lastActive.current;
+      if (!currentSection) return;
+
+      const currentIndex = sectionOrder.indexOf(currentSection);
+      if (currentIndex === -1) return;
+
+      if (diffX > 0) {
+        // Swipe Left -> Next Section (e.g. Education -> Experience -> Skills)
+        const nextIndex = (currentIndex + 1) % sectionOrder.length;
+        handleSelectCard(sectionOrder[nextIndex]);
+      } else {
+        // Swipe Right -> Previous Section (e.g. Skills -> Experience -> Education)
+        const prevIndex = (currentIndex - 1 + sectionOrder.length) % sectionOrder.length;
+        handleSelectCard(sectionOrder[prevIndex]);
+      }
+    }
+
+    touchStartRef.current = null;
+    touchEndRef.current = null;
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -109,6 +156,9 @@ export default function Home() {
             ref={overlayRef}
             className={`expanded-overlay ${active ? 'visible' : ''}`}
             onMouseLeave={handleMouseLeaveOverlay}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             {displayedCard && (
               <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
