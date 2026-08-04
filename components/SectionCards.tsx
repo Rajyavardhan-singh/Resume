@@ -86,18 +86,10 @@ export function EducationExpanded({ onOpenDoc }: ExpandedProps) {
           </div>
 
           {edu.details && (
-            <p style={{ color: 'var(--text-muted)', fontSize: 14, lineHeight: 1.65 }}>{edu.details}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: 14, lineHeight: 1.65 }} className="mobile-text-justify">{edu.details}</p>
           )}
         </div>
       ))}
-
-      <div style={{
-        borderRadius: 12, padding: '14px 18px', background: 'rgba(0,0,0,0.03)',
-        display: 'flex', alignItems: 'center', gap: 10,
-      }} className="dark:!bg-white/3">
-        <BookOpen className="w-4 h-4" style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
-        <span style={{ color: 'var(--text-muted)', fontSize: 14, fontWeight: 500 }}>Both qualifications are verified and officially recognized</span>
-      </div>
     </div>
   );
 }
@@ -193,7 +185,7 @@ export function ExperienceExpanded({ onOpenDoc }: ExpandedProps) {
           </div>
 
           {exp.description && (
-            <p style={{ color: 'var(--text-muted)', fontSize: 14, lineHeight: 1.65, marginBottom: 12 }}>{exp.description}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: 14, lineHeight: 1.65, marginBottom: 12 }} className="mobile-text-justify">{exp.description}</p>
           )}
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -249,7 +241,7 @@ export function ExperienceExpanded({ onOpenDoc }: ExpandedProps) {
               {exp.period}
             </div>
 
-            <p style={{ color: 'var(--text-muted)', fontSize: 13, lineHeight: 1.55, marginBottom: 10 }}>{exp.description}</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: 13, lineHeight: 1.55, marginBottom: 10 }} className="mobile-text-justify">{exp.description}</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {exp.skillsUsed.slice(0, 3).map(s => (
                 <span key={s} className="skill-tag-neutral" style={{ fontSize: 12, padding: '3px 9px' }}>{s}</span>
@@ -261,38 +253,42 @@ export function ExperienceExpanded({ onOpenDoc }: ExpandedProps) {
 
       {/* Internship (Tenco Systems) */}
       {internships.map((intern, i) => (
-        <div key={i} style={{ borderRadius: 14, padding: '14px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, background: 'rgba(0,0,0,0.03)', flexWrap: 'wrap' }} className="dark:!bg-white/3">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0 }}>
-            <Award className="w-4 h-4 shrink-0" style={{ color: 'var(--coral)' }} />
+        <div key={i} style={{ background: 'var(--coral-soft)', borderRadius: 16 }} className="p-4 sm:p-5">
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginBottom: 6 }}>
             <div>
-              <p style={{ color: 'var(--text-title)', fontSize: 14, fontWeight: 600 }}>{intern.company}</p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-title)', opacity: 0.88, fontSize: 13, fontWeight: 600, marginTop: 2 }}>
-                <span>{intern.role}</span>
-                <span>·</span>
-                <Calendar className="w-3 h-3" style={{ color: 'var(--coral)', flexShrink: 0 }} />
-                <span>{intern.period}</span>
-              </div>
+              <p style={{ color: 'var(--text-title)', fontSize: 15, fontWeight: 700 }}>{intern.company}</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: 13, marginTop: 1 }}>{intern.role}</p>
             </div>
+
+            {/* Document Button for Tenco Systems */}
+            {intern.docUrl && (
+              <button
+                onClick={() => {
+                  if (onOpenDoc) onOpenDoc(`${intern.company} - Document`, intern.docUrl!);
+                }}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  padding: '4px 10px', borderRadius: 999, fontSize: 11.5, fontWeight: 600,
+                  background: 'var(--card)', border: '1px solid var(--border)',
+                  color: 'var(--text-title)', boxShadow: 'var(--shadow-sm)',
+                  cursor: 'pointer', transition: 'all 0.18s ease',
+                }}
+                className="hover:scale-105"
+              >
+                <FileText className="w-3 h-3" style={{ color: 'var(--coral)' }} />
+                Document
+              </button>
+            )}
           </div>
 
-          {/* Document Button for Tenco Systems */}
-          {intern.docUrl && (
-            <button
-              onClick={() => {
-                if (onOpenDoc) onOpenDoc(`${intern.company} - Document`, intern.docUrl!);
-              }}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 5,
-                padding: '5px 12px', borderRadius: 999, fontSize: 12, fontWeight: 600,
-                background: 'var(--card)', border: '1px solid var(--border)',
-                color: 'var(--text-title)', boxShadow: 'var(--shadow-sm)',
-                cursor: 'pointer', transition: 'all 0.18s ease',
-              }}
-              className="hover:scale-105"
-            >
-              <FileText className="w-3.5 h-3.5" style={{ color: 'var(--coral)' }} />
-              Document
-            </button>
+          {/* Date with clearer, darker text color */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: 'var(--text-title)', opacity: 0.88, fontSize: 13, fontWeight: 600, marginBottom: 8 }}>
+            <Calendar className="w-3 h-3" style={{ flexShrink: 0, color: 'var(--coral)' }} />
+            {intern.period}
+          </div>
+
+          {intern.description && (
+            <p style={{ color: 'var(--text-muted)', fontSize: 13, lineHeight: 1.55 }} className="mobile-text-justify">{intern.description}</p>
           )}
         </div>
       ))}
@@ -450,13 +446,14 @@ export default function SectionCards({ active, onHover }: SectionCardsProps) {
             role="button"
             aria-label={`Open ${card.title} section`}
           >
-            <div className={isViolet ? 'icon-badge-violet' : 'icon-badge-coral'} style={{ marginBottom: 22 }}>
-              <Icon className="w-5 h-5" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+              <div className={isViolet ? 'icon-badge-violet' : 'icon-badge-coral'}>
+                <Icon className="w-5 h-5" />
+              </div>
+              <p style={{ color: 'var(--text-title)', fontSize: 20, fontWeight: 700 }}>
+                {card.title}
+              </p>
             </div>
-
-            <p style={{ color: 'var(--text-title)', fontSize: 20, fontWeight: 700, marginBottom: 8 }}>
-              {card.title}
-            </p>
 
             <p style={{ color: 'var(--text-muted)', fontSize: 15, lineHeight: 1.5 }}>
               {card.tagline}
