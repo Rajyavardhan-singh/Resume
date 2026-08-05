@@ -200,6 +200,16 @@ interface CredentialItem {
 
 const MARITIME_CREDENTIALS: CredentialItem[] = [
   {
+    id: 'indos',
+    icon: <Compass className="w-4 h-4" />,
+    label: 'INDOS',
+    number: '24EM1741',
+    details: [],
+    docTitle: 'INDOS Certificate (24EM1741)',
+    docUrl: 'https://drive.google.com/file/d/166XYju8u71Pra0NF_l6tae69sr-Np89m/view?usp=sharing',
+    accentColor: 'var(--violet)',
+  },
+  {
     id: 'cdc',
     icon: <ShieldCheck className="w-4 h-4" />,
     label: 'CDC',
@@ -374,49 +384,7 @@ export default function HeroSection({ onOpenDoc }: HeroSectionProps) {
               {/* Base row of resting chips */}
               <div className="credential-chips-row">
 
-                {/* INDOS Number (Simple Copy Chip - No Expanded View) */}
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: 4,
-                    padding: '4px 8px',
-                    borderRadius: 14,
-                    fontSize: 12,
-                    fontWeight: 600,
-                    background: 'var(--card)',
-                    border: '1px solid var(--border)',
-                    boxShadow: 'var(--shadow-sm)',
-                    color: 'var(--text-title)',
-                    height: 34,
-                  }}
-                  className="w-full select-none shrink-0"
-                >
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    <span style={{ color: 'var(--violet)', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-                      <Compass className="w-3.5 h-3.5" />
-                    </span>
-                    <span style={{ color: 'var(--violet)', fontWeight: 700, flexShrink: 0 }}>
-                      INDOS:
-                    </span>
-                    <span style={{ fontWeight: 700 }} className="select-all truncate">
-                      24EM1741
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-1 shrink-0">
-                    <div style={{ width: 1, height: 14, background: 'var(--border)' }} />
-                    <CopyIconButton
-                      text="24EM1741"
-                      title="Copy INDOS number"
-                      color="var(--violet)"
-                      hoverBg="var(--violet-soft)"
-                    />
-                  </div>
-                </div>
-
-                {/* CDC, Passport, SID stub chips (With Hover/Click Expanded View) */}
+                {/* INDOS, CDC, Passport, SID stub chips (With Hover/Click Expanded View) */}
                 {MARITIME_CREDENTIALS.map(cred => {
                   const isActive = activeCredId === cred.id;
                   const chipHoverBg = cred.id === 'sid' ? 'rgba(22, 163, 74, 0.15)' : cred.id === 'passport' ? 'var(--coral-soft)' : 'var(--violet-soft)';
