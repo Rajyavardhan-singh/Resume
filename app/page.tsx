@@ -10,6 +10,7 @@ import SectionCards, {
   EducationExpanded,
   ExperienceExpanded,
   SkillsExpanded,
+  DocumentsExpanded,
 } from '../components/SectionCards';
 import Footer from '../components/Footer';
 import DocumentModal from '../components/DocumentModal';
@@ -24,6 +25,7 @@ function ExpandedBody({ active, onOpenDoc }: ExpandedBodyProps) {
   if (active === 'education')  return <EducationExpanded onOpenDoc={onOpenDoc} />;
   if (active === 'experience') return <ExperienceExpanded onOpenDoc={onOpenDoc} />;
   if (active === 'skills')     return <SkillsExpanded />;
+  if (active === 'documents')  return <DocumentsExpanded onOpenDoc={onOpenDoc} />;
   return null;
 }
 
@@ -45,10 +47,49 @@ export default function Home() {
   const displayed     = active ?? lastActive.current;
   const displayedCard = CARDS.find(c => c.id === displayed);
 
-  const close = () => setActive(null);
+  /* Handle deep-linking via URL parameter (?section=documents, ?documents) or hash (#documents) */
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const sectionParam = urlParams.get('section') || urlParams.get('tab');
+    const hashParam = window.location.hash.replace('#', '').toLowerCase();
+
+    const validSections: SectionId[] = ['education', 'experience', 'skills', 'documents'];
+
+    let targetSection: SectionId | null = null;
+
+    if (sectionParam && validSections.includes(sectionParam as SectionId)) {
+      targetSection = sectionParam as SectionId;
+    } else if (hashParam && validSections.includes(hashParam as SectionId)) {
+      targetSection = hashParam as SectionId;
+    } else if (urlParams.has('documents')) {
+      targetSection = 'documents';
+    } else if (urlParams.has('education')) {
+      targetSection = 'education';
+    } else if (urlParams.has('experience')) {
+      targetSection = 'experience';
+    } else if (urlParams.has('skills')) {
+      targetSection = 'skills';
+    }
+
+    if (targetSection) {
+      setActive(targetSection);
+    }
+  }, []);
+
+  const close = () => {
+    setActive(null);
+    if (typeof window !== 'undefined' && window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  };
 
   const handleSelectCard = (id: SectionId) => {
     setActive(id);
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(null, '', `#${id}`);
+    }
     if (scrollableRef.current) {
       scrollableRef.current.scrollTop = 0;
     }
@@ -111,7 +152,7 @@ export default function Home() {
 
     // Ensure horizontal swipe is dominant and exceeds 40px threshold
     if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
-      const sectionOrder: SectionId[] = ['education', 'experience', 'skills'];
+      const sectionOrder: SectionId[] = ['education', 'experience', 'skills', 'documents'];
       const currentSection = active ?? lastActive.current;
       if (!currentSection) return;
 
