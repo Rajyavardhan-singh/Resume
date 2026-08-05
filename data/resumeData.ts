@@ -112,7 +112,7 @@ export const internships: Internship[] = [
 
 export const educationList: Education[] = [
   {
-    institution: "TOLANI MARITIME INSTITUTE",
+    institution: "TOLANI MARITIME INSTITUTE, PUNE",
     program: "ETO PRE SEA Training",
     period: "Aug – Dec 2024",
     details: "Batch Ref: TMI/ETO/24-2/26 | Comprehensive pre-sea training for Electro-Technical Officers as per STCW standards.",
@@ -149,7 +149,6 @@ export const itSkills: string[] = [
 ];
 
 export const activeLearningSkills: string[] = [
-  // "Spanish (Español) — Currently Learning 🇲🇽🇪🇸",
   "Advanced Automation & PLC Logic",
   "Cloud Architecture & Microservices",
   "Maritime Cyber Security Protocols",
