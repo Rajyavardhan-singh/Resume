@@ -222,11 +222,11 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Right (Inline on Laptop / Below Title on Mobile): 3 switcher pills + Close X button */}
-                  <div className="flex items-center justify-between sm:justify-end gap-1.5 sm:gap-2 shrink-0 flex-nowrap w-full sm:w-auto pt-0.5 sm:pt-0">
-                    
-                    {/* 3 Section Switcher Pills inline */}
-                    <div className="flex items-center gap-1.5 sm:gap-2 flex-nowrap">
+                  {/* Right: pills + X — pills scroll on mobile, X always visible */}
+                  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 w-full sm:w-auto pt-0.5 sm:pt-0">
+
+                    {/* Scrollable pill strip — overflow-x-auto on mobile */}
+                    <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto flex-1 sm:flex-none pb-0.5 sm:pb-0 scrollbar-hide">
                       {CARDS.map(c => (
                         <button
                           key={c.id}
@@ -238,7 +238,7 @@ export default function Home() {
                           onClick={() => handleSelectCard(c.id)}
                           style={{
                             padding: '4px 10px', borderRadius: 999, fontSize: 12, fontWeight: 600,
-                            cursor: 'pointer', border: 'none', transition: 'all 0.2s', whiteSpace: 'nowrap',
+                            cursor: 'pointer', border: 'none', transition: 'all 0.2s', whiteSpace: 'nowrap', flexShrink: 0,
                             background: c.id === (active ?? lastActive.current)
                               ? 'var(--violet)'
                               : 'var(--violet-soft)',
@@ -253,7 +253,7 @@ export default function Home() {
                       ))}
                     </div>
 
-                    {/* Close / X button inline on the right */}
+                    {/* Close / X button — always visible, never inside scroll */}
                     <button
                       onClick={close}
                       aria-label="Close panel"
