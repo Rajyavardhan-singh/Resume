@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import ProfileImage from './ProfileImage';
 import { personalInfo } from '../data/resumeData';
 import {
-  Copy, Check, FileText, ShieldCheck, FileCheck, Award, Compass
+  Copy, Check, FileText, ShieldCheck, FileCheck, Award, Compass, X
 } from 'lucide-react';
 
 interface HeroSectionProps {
@@ -200,16 +200,6 @@ interface CredentialItem {
 
 const MARITIME_CREDENTIALS: CredentialItem[] = [
   {
-    id: 'indos',
-    icon: <Compass className="w-4 h-4" />,
-    label: 'INDOS',
-    number: '24EM1741',
-    details: [],
-    docTitle: 'INDOS Certificate (24EM1741)',
-    docUrl: 'https://drive.google.com/file/d/166XYju8u71Pra0NF_l6tae69sr-Np89m/view?usp=sharing',
-    accentColor: 'var(--violet)',
-  },
-  {
     id: 'cdc',
     icon: <ShieldCheck className="w-4 h-4" />,
     label: 'CDC',
@@ -224,7 +214,7 @@ const MARITIME_CREDENTIALS: CredentialItem[] = [
     icon: <FileCheck className="w-4 h-4" />,
     label: 'Passport',
     number: 'Y1684711',
-    details: ['Valid Upto - 17/04/2034', '· US Visa Valid Upto - 29/01/2031'],
+    details: ['Valid Upto - 17/04/2034', '\u00b7 US Visa Valid Upto - 29/01/2031'],
     docTitle: 'Passport & US Visa Document (Y1684711)',
     docUrl: 'https://drive.google.com/file/d/12nlj9eG1bsJH7sAhEWoNKI2e3NZwcxdJ/view?usp=sharing',
     accentColor: 'var(--coral)',
@@ -384,7 +374,49 @@ export default function HeroSection({ onOpenDoc }: HeroSectionProps) {
               {/* Base row of resting chips */}
               <div className="credential-chips-row">
 
-                {/* INDOS, CDC, Passport, SID stub chips (With Hover/Click Expanded View) */}
+                {/* INDOS Number (Simple Copy Chip - No Expanded View) */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 4,
+                    padding: '4px 8px',
+                    borderRadius: 14,
+                    fontSize: 12,
+                    fontWeight: 600,
+                    background: 'var(--card)',
+                    border: '1px solid var(--border)',
+                    boxShadow: 'var(--shadow-sm)',
+                    color: 'var(--text-title)',
+                    height: 34,
+                  }}
+                  className="w-full select-none shrink-0"
+                >
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span style={{ color: 'var(--violet)', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+                      <Compass className="w-3.5 h-3.5" />
+                    </span>
+                    <span style={{ color: 'var(--violet)', fontWeight: 700, flexShrink: 0 }}>
+                      INDOS:
+                    </span>
+                    <span style={{ fontWeight: 700 }} className="select-all truncate">
+                      24EM1741
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1 shrink-0">
+                    <div style={{ width: 1, height: 14, background: 'var(--border)' }} />
+                    <CopyIconButton
+                      text="24EM1741"
+                      title="Copy INDOS number"
+                      color="var(--violet)"
+                      hoverBg="var(--violet-soft)"
+                    />
+                  </div>
+                </div>
+
+                {/* CDC, Passport, SID stub chips (With Hover/Click Expanded View) */}
                 {MARITIME_CREDENTIALS.map(cred => {
                   const isActive = activeCredId === cred.id;
                   const chipHoverBg = cred.id === 'sid' ? 'rgba(22, 163, 74, 0.15)' : cred.id === 'passport' ? 'var(--coral-soft)' : 'var(--violet-soft)';
@@ -473,9 +505,25 @@ export default function HeroSection({ onOpenDoc }: HeroSectionProps) {
                     maxWidth: 'calc(100vw - 32px)',
                     flexWrap: 'wrap',
                     animation: 'fadeInScale 0.18s cubic-bezier(0.4, 0, 0.2, 1)',
+                    paddingRight: 36, // space for the close button on mobile
                   }}
-                  className="select-none"
+                  className="select-none relative"
                 >
+                  {/* Mobile-only close button — top-right corner */}
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setActiveCredId(null); }}
+                    aria-label="Close"
+                    className="sm:hidden"
+                    style={{
+                      position: 'absolute', top: 6, right: 8,
+                      width: 22, height: 22, borderRadius: 6,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: 'rgba(0,0,0,0.06)', border: '1px solid var(--border)',
+                      color: 'var(--text-muted)', cursor: 'pointer', flexShrink: 0,
+                    }}
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
                   {/* Icon + Label + Number */}
                   <span style={{ color: activeCred.accentColor, display: 'flex', alignItems: 'center', flexShrink: 0 }}>
                     {activeCred.icon}
