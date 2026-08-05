@@ -4,15 +4,17 @@ import {
   Sparkles, GraduationCap, Briefcase,
   Ship, Zap, Terminal, Rocket, Compass, Globe,
   BookOpen, Calendar, Award,
-  ChevronRight, FileText, ExternalLink
+  ChevronRight, FileText, ExternalLink,
+  FolderOpen, Eye, Copy, Check
 } from 'lucide-react';
+import { useState } from 'react';
 import {
   marineElectricalSkills, itSkills, activeLearningSkills,
   educationList, sailingExperience,
   onShoreExperience, internships
 } from '../data/resumeData';
 
-export type SectionId = 'education' | 'experience' | 'skills';
+export type SectionId = 'education' | 'experience' | 'skills' | 'documents';
 
 interface ExpandedProps {
   onOpenDoc?: (title: string, url: string) => void;
@@ -110,7 +112,7 @@ export function ExperienceExpanded({ onOpenDoc }: ExpandedProps) {
       {sailingExperience.map((exp, i) => (
         <div key={i} style={{ background: 'var(--violet-soft)', borderRadius: 18 }} className="p-4 sm:p-6">
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 8 }}>
-            
+
             {/* Left: Ship Icon + Ship Name + Capacity Badge right next to name */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <div className="icon-badge-violet" style={{ width: 38, height: 38, borderRadius: 10, flexShrink: 0 }}>
@@ -388,6 +390,224 @@ export function SkillsExpanded() {
 }
 
 /* ─────────────────────────────────────────────────
+   DOCUMENTS EXPANDED
+───────────────────────────────────────────────── */
+
+function CopyBtn({ text, title }: { text: string; title?: string }) {
+  const [copied, setCopied] = useState(false);
+  const handle = () => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    });
+  };
+  return (
+    <button
+      onClick={handle}
+      title={title ?? `Copy ${text}`}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 4,
+        padding: '3px 10px', borderRadius: 999, fontSize: 11, fontWeight: 700,
+        border: '1px solid var(--border)', background: 'var(--card)',
+        color: copied ? '#16a34a' : 'var(--text-muted)',
+        cursor: 'pointer', transition: 'all 0.18s ease', flexShrink: 0,
+        whiteSpace: 'nowrap',
+      }}
+      className="hover:scale-105"
+    >
+      {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+      {copied ? 'Copied' : 'Copy No.'}
+    </button>
+  );
+}
+
+function ViewBtn({ title, url, onOpenDoc }: { title: string; url: string; onOpenDoc?: (t: string, u: string) => void }) {
+  return (
+    <button
+      onClick={() => onOpenDoc && onOpenDoc(title, url)}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 5,
+        padding: '4px 13px', borderRadius: 999, fontSize: 12, fontWeight: 700,
+        background: 'var(--violet)', color: '#fff', border: 'none',
+        cursor: 'pointer', transition: 'all 0.18s ease', flexShrink: 0,
+        boxShadow: '0 2px 8px rgba(109,40,217,0.25)',
+      }}
+      className="hover:scale-105 hover:opacity-90"
+    >
+      <Eye className="w-3.5 h-3.5" />
+      View
+    </button>
+  );
+}
+
+interface DocRowProps {
+  name: string;
+  docNumber?: string;   // show Copy button only when provided
+  docTitle: string;
+  url: string;
+  onOpenDoc?: (title: string, url: string) => void;
+}
+function DocRow({ name, docNumber, docTitle, url, onOpenDoc }: DocRowProps) {
+  return (
+    <div
+      style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        gap: 12, padding: '12px 14px', borderRadius: 14,
+        background: 'var(--card)', border: '1px solid var(--border)',
+        boxShadow: 'var(--shadow-sm)',
+        transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+      }}
+      className="hover:shadow-md hover:border-[var(--violet-soft)]"
+    >
+      {/* Left: icon + name */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
+        <div
+          style={{
+            width: 34, height: 34, borderRadius: 9, background: 'var(--violet-soft)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+          }}
+        >
+          <FileText className="w-4 h-4" style={{ color: 'var(--violet)' }} />
+        </div>
+        <div style={{ minWidth: 0 }}>
+          <p style={{ color: 'var(--text-title)', fontSize: 13.5, fontWeight: 700, lineHeight: 1.3 }}>
+            {name}
+          </p>
+          {docNumber && (
+            <p style={{ color: 'var(--text-muted)', fontSize: 11.5, marginTop: 2, fontWeight: 500 }}>
+              No. {docNumber}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Right: Copy + View (Column on mobile, Row on sm+) */}
+      <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1.5 shrink-0">
+        {docNumber && <CopyBtn text={docNumber} title={`Copy ${name} number`} />}
+        {url && <ViewBtn title={docTitle} url={url} onOpenDoc={onOpenDoc} />}
+      </div>
+    </div>
+  );
+}
+
+export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
+  return (
+    <div className="p-4 sm:p-7 flex flex-col gap-7 overflow-y-auto h-full">
+
+      {/* ── Section 1: Maritime Statutory Documents ── */}
+      <div>
+        <div className="flex items-center gap-2.5 pb-3 border-b border-[var(--border)] mb-4">
+          <div className="w-3 h-3 rounded-full bg-[var(--violet)] shrink-0" />
+          <h3 style={{ color: 'var(--text-title)', fontSize: 13, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+            Maritime Statutory Documents
+          </h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
+          <DocRow
+            name="INDOS"
+            docNumber="24EM1741"
+            docTitle="INDOS Certificate (24EM1741)"
+            url="https://drive.google.com/file/d/166XYju8u71Pra0NF_l6tae69sr-Np89m/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+          <DocRow
+            name="CDC"
+            docNumber="MUM 573376"
+            docTitle="CDC Document (MUM 573376)"
+            url="https://drive.google.com/file/d/12yjm_1r7gl8E0--86ZasE4-cLA83BojE/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+          <DocRow
+            name="PASSPORT"
+            docNumber="Y1684711"
+            docTitle="Passport (Y1684711)"
+            url="https://drive.google.com/file/d/12nlj9eG1bsJH7sAhEWoNKI2e3NZwcxdJ/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+          <DocRow
+            name="SID CARD"
+            docNumber="M35049870"
+            docTitle="Seafarer Identity Document (M35049870)"
+            url="https://drive.google.com/file/d/1B5oobNZycLJHhZTecqtF2qu6bMARiGGk/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+          <DocRow
+            name="COC – MMD Exam Clearance"
+            docTitle="COC - MMD Exam Clearance Document"
+            url="https://drive.google.com/file/d/1at6UhdW-AOPEwT0Ow6XkQNGyMXRPSRSL/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+        </div>
+      </div>
+
+      {/* ── Section 2: Education ── */}
+      <div>
+        <div className="flex items-center gap-2.5 pb-3 border-b border-[var(--border)] mb-4">
+          <div className="w-3 h-3 rounded-full bg-[var(--coral)] shrink-0" />
+          <h3 style={{ color: 'var(--text-title)', fontSize: 13, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+            Education
+          </h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
+          {educationList.filter(e => e.docUrl).map((edu, i) => (
+            <DocRow
+              key={i}
+              name={`${edu.program} `}
+              docTitle={`${edu.program} - Document`}
+              url={edu.docUrl!}
+              onOpenDoc={onOpenDoc}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* ── Section 3: Experience ── */}
+      <div>
+        <div className="flex items-center gap-2.5 pb-3 border-b border-[var(--border)] mb-4">
+          <div className="w-3 h-3 rounded-full" style={{ background: '#f59e0b' }} />
+          <h3 style={{ color: 'var(--text-title)', fontSize: 13, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+            Experience
+          </h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
+          <DocRow
+            name="MSC ROME – Sea Service Certificate"
+            docTitle="MSC ROME - Sea Service Document"
+            url="https://drive.google.com/file/d/1xTCxtZmr-tiGnOl1pETR7T4NuKCQVqky/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+          <DocRow
+            name="MSC ROME – Appraisal Report"
+            docTitle="MSC ROME - Appraisal Report"
+            url="https://drive.google.com/file/d/13rAKUgK2nZRpn8O3vRONzIACUXzuI2nq/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+          {onShoreExperience.filter(e => e.docUrl).map((exp, i) => (
+            <DocRow
+              key={`onshore-${i}`}
+              name={`${exp.role}`}
+              docTitle={`${exp.company} - Document`}
+              url={exp.docUrl!}
+              onOpenDoc={onOpenDoc}
+            />
+          ))}
+          {internships.filter(e => e.docUrl).map((intern, i) => (
+            <DocRow
+              key={`intern-${i}`}
+              name={`${'Internship'}`}
+              docTitle={`${intern.company} - Document`}
+              url={intern.docUrl!}
+              onOpenDoc={onOpenDoc}
+            />
+          ))}
+        </div>
+      </div>
+
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────
    CARD METADATA
 ───────────────────────────────────────────────── */
 export const CARDS = [
@@ -411,6 +631,13 @@ export const CARDS = [
     title: 'Skills',
     tagline: 'Marine systems, IT & active pursuits',
     stubAccent: 'violet' as const,
+  },
+  {
+    id: 'documents' as SectionId,
+    icon: FolderOpen,
+    title: 'Documents',
+    tagline: 'All certificates & records in one place',
+    stubAccent: 'coral' as const,
   },
 ];
 
