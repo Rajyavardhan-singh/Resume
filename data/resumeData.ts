@@ -66,7 +66,7 @@ export const personalInfo: PersonalInfo = {
 export const sailingExperience: SailingExperience[] = [
   {
     vessel: "MSC ROME",
-    capacity: "15,574 TEU",
+    capacity: "15,574 TEU / 151,702 GRT",
     reeferCapacity: "1,800 Sockets",
     engineSpec: "DUAL FUEL HYUNDAI-B&W 8 G95 ME-C10.5-GI-EcoEGR SCR",
     type: "Container Ship",
