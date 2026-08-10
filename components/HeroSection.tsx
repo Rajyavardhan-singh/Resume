@@ -127,62 +127,62 @@ function CocBadge({ onOpenDoc, fontSize = '12px', padding = '5px 12px' }: CocBad
   const cocDocUrl = "https://drive.google.com/file/d/1at6UhdW-AOPEwT0Ow6XkQNGyMXRPSRSL/view?usp=sharing";
 
   return (
-    <div
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 6,
-        background: 'rgba(34, 197, 94, 0.12)',
-        color: '#16a34a',
-        border: '1px solid rgba(34, 197, 94, 0.3)',
-        borderRadius: 16,
-        padding: padding,
-        fontSize: fontSize,
-        fontWeight: 700,
-        flexWrap: 'wrap',
-        maxWidth: '100%',
-      }}
-      className="dark:!bg-emerald-500/15 dark:!text-emerald-400 dark:!border-emerald-500/30 select-none shrink-0 sm:!rounded-full"
-    >
-      <span className="flex items-center gap-1.5 shrink-0 font-extrabold">
-        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-        COC:
-      </span>
+    // <div
+    //   style={{
+    //     display: 'inline-flex',
+    //     alignItems: 'center',
+    //     gap: 6,
+    //     background: 'rgba(34, 197, 94, 0.12)',
+    //     color: '#16a34a',
+    //     border: '1px solid rgba(34, 197, 94, 0.3)',
+    //     borderRadius: 16,
+    //     padding: padding,
+    //     fontSize: fontSize,
+    //     fontWeight: 700,
+    //     flexWrap: 'wrap',
+    //     maxWidth: '100%',
+    //   }}
+    //   className="dark:!bg-emerald-500/15 dark:!text-emerald-400 dark:!border-emerald-500/30 select-none shrink-0 sm:!rounded-full"
+    // >
+      // <span className="flex items-center gap-1.5 shrink-0 font-extrabold">
+      //   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+      //   COC:
+      // </span>
 
-      <span style={{ fontSize: '11.5px', fontWeight: 500, color: 'var(--text-title)' }} className="opacity-90 leading-tight">
-        Cleared the exams, Dispatching Soon from MMD
-      </span>
+      // <span style={{ fontSize: '11.5px', fontWeight: 500, color: 'var(--text-title)' }} className="opacity-90 leading-tight">
+      //   Cleared the exams, Dispatching Soon from MMD
+      // </span>
 
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          if (onOpenDoc) {
-            onOpenDoc('COC - MMD Exam Clearance Document', cocDocUrl);
-          } else {
-            window.open(cocDocUrl, '_blank');
-          }
-        }}
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 4,
-          padding: '3px 9px',
-          borderRadius: 999,
-          fontSize: '11px',
-          fontWeight: 700,
-          background: '#16a34a',
-          color: '#ffffff',
-          border: 'none',
-          cursor: 'pointer',
-          boxShadow: '0 2px 6px rgba(22, 163, 74, 0.35)',
-          transition: 'transform 0.15s ease, background-color 0.15s ease',
-        }}
-        className="hover:scale-105 hover:bg-emerald-600 shrink-0"
-      >
-        <FileText className="w-3 h-3" />
-        Document
-      </button>
-    </div>
+      // <button
+      //   onClick={(e) => {
+      //     e.stopPropagation();
+      //     if (onOpenDoc) {
+      //       onOpenDoc('COC - MMD Exam Clearance Document', cocDocUrl);
+      //     } else {
+      //       window.open(cocDocUrl, '_blank');
+      //     }
+      //   }}
+      //   style={{
+      //     display: 'inline-flex',
+      //     alignItems: 'center',
+      //     gap: 4,
+      //     padding: '3px 9px',
+      //     borderRadius: 999,
+      //     fontSize: '11px',
+      //     fontWeight: 700,
+      //     background: '#16a34a',
+      //     color: '#ffffff',
+      //     border: 'none',
+      //     cursor: 'pointer',
+      //     boxShadow: '0 2px 6px rgba(22, 163, 74, 0.35)',
+      //     transition: 'transform 0.15s ease, background-color 0.15s ease',
+      //   }}
+      //   className="hover:scale-105 hover:bg-emerald-600 shrink-0"
+      // >
+      //   <FileText className="w-3 h-3" />
+      //   Document
+      // </button>
+    // </div>
   );
 }
 
