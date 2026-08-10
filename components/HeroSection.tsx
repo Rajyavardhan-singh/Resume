@@ -182,7 +182,7 @@ function CocBadge({ onOpenDoc, fontSize = '12px', padding = '5px 12px' }: CocBad
         <FileText className="w-3 h-3" />
         Document
       </button>
-    // </div>
+     </div>
   );
 }
 
