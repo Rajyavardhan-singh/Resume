@@ -475,7 +475,7 @@ function DocRow({ name, docNumber, docTitle, url, onOpenDoc }: DocRowProps) {
           </p>
           {docNumber && (
             <p style={{ color: 'var(--text-muted)', fontSize: 11.5, marginTop: 2, fontWeight: 500 }}>
-              No. {docNumber}
+              {docNumber}
             </p>
           )}
         </div>
