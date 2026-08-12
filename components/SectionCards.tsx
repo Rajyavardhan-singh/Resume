@@ -573,9 +573,9 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
             onOpenDoc={onOpenDoc}
           />
           <DocRow
-            name="COP Basic IGF (Expiry:20-DEC-2029)"
+            name="COP Basic IGF"
             docNumber = "BIGFE24009111"
-            docTitle="Basic Training for Service on Ships using Fuels Covered with IGF Code"
+            docTitle="Basic Training for Service on Ships using Fuels Covered with IGF Code (Expiry:20-DEC-2029)"
             url="https://drive.google.com/file/d/12lXOFf-RIkGv7OII3gQwcAvwa50-fAB8/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
