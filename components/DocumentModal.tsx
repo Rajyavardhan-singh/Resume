@@ -1,6 +1,5 @@
 'use client';
-
-import { X, Download, FileText } from 'lucide-react';
+import { X, Download, FileText, Printer } from 'lucide-react';
 
 interface DocumentModalProps {
   isOpen: boolean;
@@ -31,11 +30,32 @@ export function getDownloadUrl(url: string): string {
   return url;
 }
 
+export function getPrintUrl(url: string): string {
+  if (!url) return '';
+  if (url.includes('/file/d/')) {
+    const fileId = url.split('/file/d/')[1]?.split('/')[0];
+    if (fileId) {
+      return `https://drive.google.com/file/d/${fileId}/view`;
+    }
+  }
+  return url;
+}
+
 export default function DocumentModal({ isOpen, onClose, title, url }: DocumentModalProps) {
   if (!isOpen || !url) return null;
 
   const embedUrl = getEmbedUrl(url);
   const downloadUrl = getDownloadUrl(url);
+
+  const handlePrint = () => {
+    const printUrl = getPrintUrl(url);
+    const printWindow = window.open(printUrl, '_blank', 'width=800,height=600');
+    if (printWindow) {
+      printWindow.addEventListener('load', () => {
+        printWindow.print();
+      });
+    }
+  };
 
   return (
     <div
@@ -56,10 +76,9 @@ export default function DocumentModal({ isOpen, onClose, title, url }: DocumentM
               {title}
             </h3>
           </div>
-
           <div className="flex items-center gap-2 shrink-0">
             {/* Download Button */}
-            <a
+            
               href={downloadUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -70,7 +89,15 @@ export default function DocumentModal({ isOpen, onClose, title, url }: DocumentM
               <Download className="w-3.5 h-3.5" />
               <span>Download</span>
             </a>
-
+            {/* Print Button */}
+            <button
+              onClick={handlePrint}
+              className="px-3.5 py-1.5 rounded-xl border border-[var(--border)] text-[var(--text-title)] bg-[var(--violet-soft)] hover:bg-[var(--violet)] hover:text-white transition-all flex items-center gap-1.5 text-xs font-semibold shadow-sm"
+              title="Print document"
+            >
+              <Printer className="w-3.5 h-3.5" />
+              <span>Print</span>
+            </button>
             {/* Close button */}
             <button
               onClick={onClose}
@@ -82,7 +109,6 @@ export default function DocumentModal({ isOpen, onClose, title, url }: DocumentM
             </button>
           </div>
         </div>
-
         {/* Embedded Document Frame */}
         <div className="flex-1 w-full h-full bg-slate-900/5 dark:bg-black/40 relative">
           <iframe
