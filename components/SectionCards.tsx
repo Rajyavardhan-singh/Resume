@@ -538,9 +538,66 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
             onOpenDoc={onOpenDoc}
           />
           <DocRow
-            name="High Voltage Certificate"
+            name="High Voltage MGM. Cert."
+            docNumber = "2010013223260272"
             docTitle="High Voltage MGM."
             url="https://drive.google.com/file/d/1Mxz9RU3sbI4OkKmQsFV4sSNdLYNvrR97/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+          <DocRow
+            name="MFA"
+            docNumber = "20100164112507813"
+            docTitle="Certificate of Proficiency in Medical First Aid"
+            url="https://drive.google.com/file/d/13KuTC1khFFDPrYzJ5RfRG_Fe8rvQugJC/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+          <DocRow
+            name="PSCRB"
+            docNumber = "20100162112509818"
+            docTitle="Certificate of Proficiency in Survival Craft and Rescue Boat other than Fast Rescue Boat"
+            url="https://drive.google.com/file/d/11ZsopuVdCuwUWticUhJkSgOui7NM2Pqj/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+          <DocRow
+            name="AFF"
+            docNumber = "20100163112600112"
+            docTitle="Certificate of Proficiency in Advanced Fire Fighting"
+            url="https://drive.google.com/file/d/1629TmSQ1m-u20AOakF0IlkJPMjDPuomE/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+          <DocRow
+            name="Basic IGF"
+            docNumber = "1050235311240194"
+            docTitle="Basic Training for Service on Ships using Fuels Covered with IGF Code"
+            url="https://drive.google.com/file/d/12lXOFf-RIkGv7OII3gQwcAvwa50-fAB8/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+          <DocRow
+            name="COP Basic IGF (Expiry:20-DEC-2029)"
+            docNumber = "BIGFE24009111"
+            docTitle="Basic Training for Service on Ships using Fuels Covered with IGF Code"
+            url="https://drive.google.com/file/d/12lXOFf-RIkGv7OII3gQwcAvwa50-fAB8/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+          <DocRow
+            name="EFA, PST, PSSR"
+            docNumber = "20100561012402312"
+            docTitle="Certificate of Proficiency in Personal Survival Techniques, Fire Prevention & Fire Fighting, Elementary First Aid and Personal Safety and Social Responsibilities"
+            url="https://drive.google.com/file/d/12_ski8KjYyVPKed6ZK0H8FghF9YceV8O/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+          <DocRow
+            name="STSDSD"
+            docNumber = "20100566212403212"
+            docTitle="Certificate of Proficiency in Security Training for Seafarers with Designated Security Duties"
+            url="https://drive.google.com/file/d/12_ski8KjYyVPKed6ZK0H8FghF9YceV8O/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+          <DocRow
+            name="STSDSD"
+            docNumber = "20100566212403212"
+            docTitle="Certificate of Proficiency in Security Training for Seafarers with Designated Security Duties"
+            url="https://drive.google.com/file/d/12WQUJEBGIoKylwQ48Gvqf716Xo1AM8OB/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
         </div>
