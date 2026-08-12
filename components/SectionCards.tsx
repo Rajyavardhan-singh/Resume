@@ -537,6 +537,12 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
             url="https://drive.google.com/file/d/1at6UhdW-AOPEwT0Ow6XkQNGyMXRPSRSL/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
+          <DocRow
+            name="High Voltage Certificate"
+            docTitle="High Voltage MGM."
+            url="https://drive.google.com/file/d/1Mxz9RU3sbI4OkKmQsFV4sSNdLYNvrR97/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
         </div>
       </div>
 
