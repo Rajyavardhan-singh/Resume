@@ -538,7 +538,7 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
             onOpenDoc={onOpenDoc}
           />
           <DocRow
-            name="High Voltage MGM. Cert."
+            name="HV MGM. Cert."
             docNumber = "2010013223260272"
             docTitle="High Voltage MGM."
             url="https://drive.google.com/file/d/1Mxz9RU3sbI4OkKmQsFV4sSNdLYNvrR97/view?usp=sharing"
