@@ -576,20 +576,13 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
             name="COP Basic IGF"
             docNumber = "BIGFE24009111"
             docTitle="Basic Training for Service on Ships using Fuels Covered with IGF Code (Expiry:20-DEC-2029)"
-            url="https://drive.google.com/file/d/12lXOFf-RIkGv7OII3gQwcAvwa50-fAB8/view?usp=sharing"
+            url="https://drive.google.com/file/d/15wrr2XBkc8OpFx8Nle0qIrKXwaHGglq7/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
           <DocRow
             name="EFA, PST, PSSR"
             docNumber = "20100561012402312"
             docTitle="Certificate of Proficiency in Personal Survival Techniques, Fire Prevention & Fire Fighting, Elementary First Aid and Personal Safety and Social Responsibilities"
-            url="https://drive.google.com/file/d/12_ski8KjYyVPKed6ZK0H8FghF9YceV8O/view?usp=sharing"
-            onOpenDoc={onOpenDoc}
-          />
-          <DocRow
-            name="STSDSD"
-            docNumber = "20100566212403212"
-            docTitle="Certificate of Proficiency in Security Training for Seafarers with Designated Security Duties"
             url="https://drive.google.com/file/d/12_ski8KjYyVPKed6ZK0H8FghF9YceV8O/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
