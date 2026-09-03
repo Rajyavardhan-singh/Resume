@@ -30,16 +30,46 @@ export function getDownloadUrl(url: string): string {
   return url;
 }
 
+// export function getPrintUrl(url: string): string {
+//   if (!url) return '';
+//   if (url.includes('/file/d/')) {
+//     const fileId = url.split('/file/d/')[1]?.split('/')[0];
+//     if (fileId) {
+//       return `https://drive.google.com/file/d/${fileId}/view`;
+//     }
+//   }
+//   return url;
+// }
+
 export function getPrintUrl(url: string): string {
   if (!url) return '';
+
   if (url.includes('/file/d/')) {
     const fileId = url.split('/file/d/')[1]?.split('/')[0];
+
     if (fileId) {
-      return `https://drive.google.com/file/d/${fileId}/view`;
+      return `https://drive.google.com/uc?export=download&id=${fileId}`;
     }
   }
+
   return url;
 }
+const handlePrint = () => {
+  const printUrl = getPrintUrl(url);
+
+  const printWindow = window.open(
+    printUrl,
+    '_blank',
+    'width=800,height=600'
+  );
+
+  if (printWindow) {
+    printWindow.onload = () => {
+      printWindow.focus();
+      printWindow.print();
+    };
+  }
+};
 
 export default function DocumentModal({ isOpen, onClose, title, url }: DocumentModalProps) {
   if (!isOpen || !url) return null;
