@@ -354,7 +354,7 @@ export default function HeroSection({ onOpenDoc }: HeroSectionProps) {
                 {personalInfo.name}
               </h1>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="accent-violet-badge">ELECTRICAL CADET (TEO)</span>
+                <span className="accent-violet-badge">ELECTRO TECHNICAL OFFICER (ETO)</span>
                 <CocBadge onOpenDoc={onOpenDoc} />
               </div>
             </div>
