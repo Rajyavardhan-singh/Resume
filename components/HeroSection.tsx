@@ -329,7 +329,7 @@ export default function HeroSection({ onOpenDoc }: HeroSectionProps) {
                 className="shrink-0 select-none"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-[var(--violet)] shrink-0" />
-                <span>ELECTRICAL CADET (TEO)</span>
+                <span>ELECTRO TECHNICAL OFFICER (ETO)</span>
               </div>
 
               {/* COC Badge */}
