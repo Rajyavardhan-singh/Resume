@@ -77,37 +77,39 @@ export default function DocumentModal({ isOpen, onClose, title, url }: DocumentM
             </h3>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            {/* Download Button */}
-            
-              href={downloadUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              download
-              className="px-3.5 py-1.5 rounded-xl border border-[var(--border)] text-[var(--text-title)] bg-[var(--violet-soft)] hover:bg-[var(--violet)] hover:text-white transition-all flex items-center gap-1.5 text-xs font-semibold shadow-sm"
-              title="Download document"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>Download</span>
-            </a>
-            {/* Print Button */}
-            <button
-              onClick={handlePrint}
-              className="px-3.5 py-1.5 rounded-xl border border-[var(--border)] text-[var(--text-title)] bg-[var(--violet-soft)] hover:bg-[var(--violet)] hover:text-white transition-all flex items-center gap-1.5 text-xs font-semibold shadow-sm"
-              title="Print document"
-            >
-              <Printer className="w-3.5 h-3.5" />
-              <span>Print</span>
-            </button>
-            {/* Close button */}
-            <button
-              onClick={onClose}
-              className="p-1.5 sm:p-2 rounded-xl border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--coral)] hover:border-[var(--coral)] hover:bg-[var(--coral-soft)] transition-colors"
-              title="Close document viewer"
-              aria-label="Close modal"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
+  {/* Download Button */}
+  <a
+    href={downloadUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    download
+    className="px-3.5 py-1.5 rounded-xl border border-[var(--border)] text-[var(--text-title)] bg-[var(--violet-soft)] hover:bg-[var(--violet)] hover:text-white transition-all flex items-center gap-1.5 text-xs font-semibold shadow-sm"
+    title="Download document"
+  >
+    <Download className="w-3.5 h-3.5" />
+    <span>Download</span>
+  </a>
+
+  {/* Print Button */}
+  <button
+    onClick={handlePrint}
+    className="px-3.5 py-1.5 rounded-xl border border-[var(--border)] text-[var(--text-title)] bg-[var(--violet-soft)] hover:bg-[var(--violet)] hover:text-white transition-all flex items-center gap-1.5 text-xs font-semibold shadow-sm"
+    title="Print document"
+  >
+    <Printer className="w-3.5 h-3.5" />
+    <span>Print</span>
+  </button>
+
+  {/* Close button */}
+  <button
+    onClick={onClose}
+    className="p-1.5 sm:p-2 rounded-xl border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--coral)] hover:border-[var(--coral)] hover:bg-[var(--coral-soft)] transition-colors"
+    title="Close document viewer"
+    aria-label="Close modal"
+  >
+    <X className="w-4 h-4" />
+  </button>
+</div>
         </div>
         {/* Embedded Document Frame */}
         <div className="flex-1 w-full h-full bg-slate-900/5 dark:bg-black/40 relative">
