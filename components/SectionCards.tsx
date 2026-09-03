@@ -600,6 +600,15 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
             url="https://drive.google.com/file/d/12WQUJEBGIoKylwQ48Gvqf716Xo1AM8OB/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
+          <DocRow
+            name="SAGAR MEIN YOG"
+         
+            docTitle="Certificates of SAGAR MEIN YOG"
+            url="https://drive.google.com/file/d/1YZ0VQqyX5WQHMXO5OemSa0AlD3Hbli36/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+
+         
         </div>
       </div>
 
