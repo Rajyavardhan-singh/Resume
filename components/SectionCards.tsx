@@ -586,6 +586,13 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
             url="https://drive.google.com/file/d/12_ski8KjYyVPKed6ZK0H8FghF9YceV8O/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
+           <DocRow
+            name="PSSR AMDT"
+            docNumber = "ADU-957-081256"
+            docTitle="Certificate of PSSR AMENDMENT"
+            url="https://drive.google.com/file/d/1-6rolIehWwMGhwH6RRFXZwVjzUr1CGGD/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
           <DocRow
             name="STSDSD"
             docNumber = "20100566212403212"
