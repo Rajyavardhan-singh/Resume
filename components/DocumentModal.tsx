@@ -54,7 +54,15 @@ export function getPrintUrl(url: string): string {
 
   return url;
 }
-const handlePrint = () => {
+
+
+export default function DocumentModal({ isOpen, onClose, title, url }: DocumentModalProps) {
+  if (!isOpen || !url) return null;
+
+  const embedUrl = getEmbedUrl(url);
+  const downloadUrl = getDownloadUrl(url);
+
+  const handlePrint = () => {
   const printUrl = getPrintUrl(url);
 
   const printWindow = window.open(
@@ -70,22 +78,6 @@ const handlePrint = () => {
     };
   }
 };
-
-export default function DocumentModal({ isOpen, onClose, title, url }: DocumentModalProps) {
-  if (!isOpen || !url) return null;
-
-  const embedUrl = getEmbedUrl(url);
-  const downloadUrl = getDownloadUrl(url);
-
-  const handlePrint = () => {
-    const printUrl = getPrintUrl(url);
-    const printWindow = window.open(printUrl, '_blank', 'width=800,height=600');
-    if (printWindow) {
-      printWindow.addEventListener('load', () => {
-        printWindow.print();
-      });
-    }
-  };
 
   return (
     <div
