@@ -534,7 +534,7 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
           <DocRow
             name="COC – MMD Exam Clearance"
             docTitle="COC - MMD Exam Clearance Document"
-            url="https://drive.google.com/file/d/1at6UhdW-AOPEwT0Ow6XkQNGyMXRPSRSL/view?usp=sharing"
+            url="https://drive.google.com/file/d/1t5yGY0UM0f4w26ODyPe0n9K48PVcKUrj/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
           <DocRow
