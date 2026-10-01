@@ -504,10 +504,10 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
           <DocRow
-            name="INDOS"
-            docNumber="24EM1741"
-            docTitle="INDOS Certificate (24EM1741)"
-            url="https://drive.google.com/file/d/166XYju8u71Pra0NF_l6tae69sr-Np89m/view?usp=sharing"
+            name="COC- ETO-07545"
+            docNumber = "ETO-07545"
+            docTitle="COC- ETO-07545"
+            url="https://drive.google.com/file/d/1eO91fNQUunawwBt7t-aHjGHhUwdz4lof/view?usp=drive_link"
             onOpenDoc={onOpenDoc}
           />
           <DocRow
@@ -524,6 +524,7 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
             url="https://drive.google.com/file/d/12nlj9eG1bsJH7sAhEWoNKI2e3NZwcxdJ/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
+          
           <DocRow
             name="SID CARD"
             docNumber="M35049870"
@@ -532,9 +533,10 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
             onOpenDoc={onOpenDoc}
           />
           <DocRow
-            name="COC – MMD Exam Clearance"
-            docTitle="COC - MMD Exam Clearance Document"
-            url="https://drive.google.com/file/d/1t5yGY0UM0f4w26ODyPe0n9K48PVcKUrj/view?usp=sharing"
+            name="INDOS"
+            docNumber="24EM1741"
+            docTitle="INDOS Certificate (24EM1741)"
+            url="https://drive.google.com/file/d/166XYju8u71Pra0NF_l6tae69sr-Np89m/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
           <DocRow
