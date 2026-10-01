@@ -504,7 +504,7 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
           <DocRow
-            name="COC- ETO-07545"
+            name="ETO COC"
             docNumber = "ETO-07545"
             docTitle="COC- ETO-07545"
             url="https://drive.google.com/file/d/1eO91fNQUunawwBt7t-aHjGHhUwdz4lof/view?usp=drive_link"
