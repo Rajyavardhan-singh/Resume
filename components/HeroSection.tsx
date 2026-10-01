@@ -144,16 +144,16 @@ function CocBadge({ onOpenDoc, fontSize = '12px', padding = '5px 12px' }: CocBad
       }}
       className="dark:!bg-emerald-500/15 dark:!text-emerald-400 dark:!border-emerald-500/30 select-none shrink-0 sm:!rounded-full"
     >
-       <span className="flex items-center gap-1.5 shrink-0 font-extrabold">
-         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-         COC:
-       </span>
+      <span className="flex items-center gap-1.5 shrink-0 font-extrabold">
+        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+        COC:
+      </span>
 
-       <span style={{ fontSize: '11.5px', fontWeight: 500, color: 'var(--text-title)' }} className="opacity-90 leading-tight">
-         ETO-07545
-       </span>
+      <span style={{ fontSize: '11.5px', fontWeight: 500, color: 'var(--text-title)' }} className="opacity-90 leading-tight">
+        ETO-07545
+      </span>
 
-       <button 
+      <button
         onClick={(e) => {
           e.stopPropagation();
           if (onOpenDoc) {
@@ -182,7 +182,7 @@ function CocBadge({ onOpenDoc, fontSize = '12px', padding = '5px 12px' }: CocBad
         <FileText className="w-3 h-3" />
         Document
       </button>
-     </div>
+    </div>
   );
 }
 
@@ -235,6 +235,7 @@ const MARITIME_CREDENTIALS: CredentialItem[] = [
 export default function HeroSection({ onOpenDoc }: HeroSectionProps) {
   const [activeCredId, setActiveCredId] = useState<string | null>(null);
   const credsRef = useRef<HTMLDivElement>(null);
+  const credHoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const activeCred = MARITIME_CREDENTIALS.find(c => c.id === activeCredId);
 
@@ -425,7 +426,16 @@ export default function HeroSection({ onOpenDoc }: HeroSectionProps) {
                       key={cred.id}
                       onMouseEnter={() => {
                         if (typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-                          setActiveCredId(cred.id);
+                          if (credHoverTimeoutRef.current) clearTimeout(credHoverTimeoutRef.current);
+                          credHoverTimeoutRef.current = setTimeout(() => {
+                            setActiveCredId(cred.id);
+                          }, 300);
+                        }
+                      }}
+                      onMouseLeave={() => {
+                        if (credHoverTimeoutRef.current) {
+                          clearTimeout(credHoverTimeoutRef.current);
+                          credHoverTimeoutRef.current = null;
                         }
                       }}
                       onClick={(e) => {

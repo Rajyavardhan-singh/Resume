@@ -22,10 +22,10 @@ interface ExpandedBodyProps {
 
 /* Map section IDs → expanded panel */
 function ExpandedBody({ active, onOpenDoc }: ExpandedBodyProps) {
-  if (active === 'education')  return <EducationExpanded onOpenDoc={onOpenDoc} />;
+  if (active === 'education') return <EducationExpanded onOpenDoc={onOpenDoc} />;
   if (active === 'experience') return <ExperienceExpanded onOpenDoc={onOpenDoc} />;
-  if (active === 'skills')     return <SkillsExpanded />;
-  if (active === 'documents')  return <DocumentsExpanded onOpenDoc={onOpenDoc} />;
+  if (active === 'skills') return <SkillsExpanded />;
+  if (active === 'documents') return <DocumentsExpanded onOpenDoc={onOpenDoc} />;
   return null;
 }
 
@@ -39,12 +39,13 @@ export default function Home() {
 
   const scrollableRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const pillHoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   /* Keep last-active so the panel stays visible during close animation */
   const lastActive = useRef<SectionId | null>(null);
   if (active) lastActive.current = active;
 
-  const displayed     = active ?? lastActive.current;
+  const displayed = active ?? lastActive.current;
   const displayedCard = CARDS.find(c => c.id === displayed);
 
   /* Handle deep-linking via URL parameter (?section=documents, ?documents) or hash (#documents) */
@@ -128,7 +129,7 @@ export default function Home() {
   };
 
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
-  const touchEndRef   = useRef<{ x: number; y: number } | null>(null);
+  const touchEndRef = useRef<{ x: number; y: number } | null>(null);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     touchStartRef.current = {
@@ -206,7 +207,7 @@ export default function Home() {
 
                 {/* ── Header bar ─────────────────────────── */}
                 <div className="p-3.5 sm:p-5 border-b border-[var(--border)] shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[var(--card)]">
-                  
+
                   {/* Left: Icon + Title & Subtitle */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
                     <div className={displayedCard.stubAccent === 'violet' ? 'icon-badge-violet' : 'icon-badge-coral'} style={{ flexShrink: 0, width: 36, height: 36, borderRadius: 10 }}>
@@ -232,7 +233,16 @@ export default function Home() {
                           key={c.id}
                           onMouseEnter={() => {
                             if (typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-                              setActive(c.id);
+                              if (pillHoverTimeoutRef.current) clearTimeout(pillHoverTimeoutRef.current);
+                              pillHoverTimeoutRef.current = setTimeout(() => {
+                                setActive(c.id);
+                              }, 300);
+                            }
+                          }}
+                          onMouseLeave={() => {
+                            if (pillHoverTimeoutRef.current) {
+                              clearTimeout(pillHoverTimeoutRef.current);
+                              pillHoverTimeoutRef.current = null;
                             }
                           }}
                           onClick={() => handleSelectCard(c.id)}

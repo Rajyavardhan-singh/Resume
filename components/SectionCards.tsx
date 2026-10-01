@@ -7,7 +7,7 @@ import {
   ChevronRight, FileText, ExternalLink,
   FolderOpen, Eye, Copy, Check
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   marineElectricalSkills, itSkills, activeLearningSkills,
   educationList, sailingExperience,
@@ -505,7 +505,7 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
           <DocRow
             name="ETO COC"
-            docNumber = "ETO-07545"
+            docNumber="ETO-07545"
             docTitle="COC- ETO-07545"
             url="https://drive.google.com/file/d/1eO91fNQUunawwBt7t-aHjGHhUwdz4lof/view?usp=drive_link"
             onOpenDoc={onOpenDoc}
@@ -524,7 +524,7 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
             url="https://drive.google.com/file/d/12nlj9eG1bsJH7sAhEWoNKI2e3NZwcxdJ/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
-          
+
           <DocRow
             name="SID CARD"
             docNumber="M35049870"
@@ -541,76 +541,76 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
           />
           <DocRow
             name="HV MGM. Cert."
-            docNumber = "2010013223260272"
+            docNumber="2010013223260272"
             docTitle="High Voltage MGM."
             url="https://drive.google.com/file/d/1Mxz9RU3sbI4OkKmQsFV4sSNdLYNvrR97/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
           <DocRow
             name="MFA"
-            docNumber = "20100164112507813"
+            docNumber="20100164112507813"
             docTitle="Certificate of Proficiency in Medical First Aid"
             url="https://drive.google.com/file/d/13KuTC1khFFDPrYzJ5RfRG_Fe8rvQugJC/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
           <DocRow
             name="PSCRB"
-            docNumber = "20100162112509818"
+            docNumber="20100162112509818"
             docTitle="Certificate of Proficiency in Survival Craft and Rescue Boat other than Fast Rescue Boat"
             url="https://drive.google.com/file/d/11ZsopuVdCuwUWticUhJkSgOui7NM2Pqj/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
           <DocRow
             name="AFF"
-            docNumber = "20100163112600112"
+            docNumber="20100163112600112"
             docTitle="Certificate of Proficiency in Advanced Fire Fighting"
             url="https://drive.google.com/file/d/1629TmSQ1m-u20AOakF0IlkJPMjDPuomE/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
           <DocRow
             name="Basic IGF"
-            docNumber = "1050235311240194"
+            docNumber="1050235311240194"
             docTitle="Basic Training for Service on Ships using Fuels Covered with IGF Code"
             url="https://drive.google.com/file/d/12lXOFf-RIkGv7OII3gQwcAvwa50-fAB8/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
           <DocRow
             name="COP Basic IGF"
-            docNumber = "BIGFE24009111"
+            docNumber="BIGFE24009111"
             docTitle="Basic Training for Service on Ships using Fuels Covered with IGF Code (Expiry:20-DEC-2029)"
             url="https://drive.google.com/file/d/15wrr2XBkc8OpFx8Nle0qIrKXwaHGglq7/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
           <DocRow
             name="EFA, PST, PSSR"
-            docNumber = "20100561012402312"
+            docNumber="20100561012402312"
             docTitle="Certificate of Proficiency in Personal Survival Techniques, Fire Prevention & Fire Fighting, Elementary First Aid and Personal Safety and Social Responsibilities"
             url="https://drive.google.com/file/d/12_ski8KjYyVPKed6ZK0H8FghF9YceV8O/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
-           <DocRow
+          <DocRow
             name="PSSR AMDT"
-            docNumber = "ADU-957-081256"
+            docNumber="ADU-957-081256"
             docTitle="Certificate of PSSR AMENDMENT"
             url="https://drive.google.com/file/d/1-6rolIehWwMGhwH6RRFXZwVjzUr1CGGD/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
           <DocRow
             name="STSDSD"
-            docNumber = "20100566212403212"
+            docNumber="20100566212403212"
             docTitle="Certificate of Proficiency in Security Training for Seafarers with Designated Security Duties"
             url="https://drive.google.com/file/d/12WQUJEBGIoKylwQ48Gvqf716Xo1AM8OB/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
           <DocRow
             name="SAGAR MEIN YOG"
-         
+
             docTitle="Certificates of SAGAR MEIN YOG"
             url="https://drive.google.com/file/d/1YZ0VQqyX5WQHMXO5OemSa0AlD3Hbli36/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
 
-         
+
         </div>
       </div>
 
@@ -724,6 +724,8 @@ interface SectionCardsProps {
 }
 
 export default function SectionCards({ active, onHover }: SectionCardsProps) {
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   return (
     <div className={`section-cards-stub-row ${active ? 'dimmed' : ''}`}>
       {CARDS.map(card => {
@@ -735,7 +737,16 @@ export default function SectionCards({ active, onHover }: SectionCardsProps) {
             className="stub-card group"
             onMouseEnter={() => {
               if (typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-                onHover(card.id);
+                if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+                hoverTimeoutRef.current = setTimeout(() => {
+                  onHover(card.id);
+                }, 300);
+              }
+            }}
+            onMouseLeave={() => {
+              if (hoverTimeoutRef.current) {
+                clearTimeout(hoverTimeoutRef.current);
+                hoverTimeoutRef.current = null;
               }
             }}
             onClick={(e) => {
