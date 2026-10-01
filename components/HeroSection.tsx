@@ -157,7 +157,7 @@ function CocBadge({ onOpenDoc, fontSize = '12px', padding = '5px 12px' }: CocBad
         onClick={(e) => {
           e.stopPropagation();
           if (onOpenDoc) {
-            onOpenDoc('COC - MMD Exam Clearance Document', cocDocUrl);
+            onOpenDoc('COC - ETO-07545', cocDocUrl);
           } else {
             window.open(cocDocUrl, '_blank');
           }
