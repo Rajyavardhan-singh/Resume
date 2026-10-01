@@ -124,7 +124,7 @@ interface CocBadgeProps {
 }
 
 function CocBadge({ onOpenDoc, fontSize = '12px', padding = '5px 12px' }: CocBadgeProps) {
-  const cocDocUrl = "https://drive.google.com/file/d/1t5yGY0UM0f4w26ODyPe0n9K48PVcKUrj/view?usp=sharing";
+  const cocDocUrl = "https://drive.google.com/file/d/1eO91fNQUunawwBt7t-aHjGHhUwdz4lof/view?usp=sharing";
 
   return (
     <div
