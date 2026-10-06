@@ -5,9 +5,9 @@ import {
   Ship, Zap, Terminal, Rocket, Compass, Globe,
   BookOpen, Calendar, Award,
   ChevronRight, FileText, ExternalLink,
-  FolderOpen, Eye, Copy, Check
+  FolderOpen, Eye, Copy, Check, Clock
 } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   marineElectricalSkills, itSkills, activeLearningSkills,
   educationList, sailingExperience,
@@ -440,51 +440,306 @@ function ViewBtn({ title, url, onOpenDoc }: { title: string; url: string; onOpen
   );
 }
 
+/* ─────────────────────────────────────────────────
+   VALIDITY HELPERS
+───────────────────────────────────────────────── */
+
+/**
+ * Given an ISO date string (YYYY-MM-DD) for expiry and an issue date,
+ * returns an object with remaining time label and progress (0–100).
+ */
+function useValidityInfo(issuedDate: string, expiryDate: string) {
+  if (expiryDate === 'NA') {
+    return { progressPct: 0, isWarning: false, isExpired: false, isNoExpiry: true, remainingLabel: 'No Expiry' };
+  }
+
+  const now = new Date();
+  const issued = new Date(issuedDate);
+  const expiry = new Date(expiryDate);
+
+  const totalMs = expiry.getTime() - issued.getTime();
+  const elapsedMs = now.getTime() - issued.getTime();
+  const remainingMs = expiry.getTime() - now.getTime();
+
+  const progressPct = Math.min(100, Math.max(0, (elapsedMs / totalMs) * 100));
+  const isExpired = remainingMs <= 0;
+  const isWarning = !isExpired && remainingMs < 6 * 30.44 * 24 * 60 * 60 * 1000; // < 6 months
+
+  // Build human-readable remaining time
+  let remainingLabel = '';
+  if (isExpired) {
+    remainingLabel = 'Expired';
+  } else {
+    const totalDays = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+    const years = Math.floor(totalDays / 365);
+    const months = Math.floor((totalDays % 365) / 30);
+    const days = totalDays % 30;
+
+    if (years > 0) {
+      // More than a year: show yrs + months
+      remainingLabel = `${years}yr${years > 1 ? 's' : ''}`;
+      if (months > 0) remainingLabel += ` ${months}mo`;
+    } else {
+      // Less than a year: show months + days
+      if (months > 0) remainingLabel = `${months}mo`;
+      if (days > 0) remainingLabel += (months > 0 ? ' ' : '') + `${days}d`;
+      if (!remainingLabel) remainingLabel = 'Expiring soon';
+    }
+    remainingLabel += ' of validity';
+  }
+
+  return { progressPct, isWarning, isExpired, isNoExpiry: false, remainingLabel };
+}
+
+/* ─────────────────────────────────────────────────
+   COPY-ON-CLICK DATE CHIP
+───────────────────────────────────────────────── */
+function DateChip({ label, dateStr }: { label: string; dateStr: string }) {
+  const [flash, setFlash] = useState(false);
+
+  if (dateStr === 'NA') {
+    return (
+      <div style={{
+        display: 'inline-flex', alignItems: 'center', gap: 5,
+        padding: '4px 10px', borderRadius: 8, fontSize: 11, fontWeight: 600,
+        border: '1px solid rgba(22,163,74,0.3)', background: 'rgba(22,163,74,0.08)',
+        color: '#16a34a', whiteSpace: 'nowrap',
+      }}>
+        <span style={{ color: 'var(--text-muted)', fontWeight: 500, marginRight: 2 }}>{label}</span>
+        No Expiry
+      </div>
+    );
+  }
+
+  const dateObj = new Date(dateStr);
+  const formattedDisplay = dateObj.toLocaleDateString('en-IN', {
+    day: 'numeric', month: 'short', year: 'numeric',
+  });
+  const dd = String(dateObj.getDate()).padStart(2, '0');
+  const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const yyyy = dateObj.getFullYear();
+  const formattedCopy = `${dd}/${mm}/${yyyy}`;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(formattedCopy).then(() => {
+      setFlash(true);
+      setTimeout(() => setFlash(false), 1400);
+    });
+  };
+  return (
+    <button
+      onClick={handleCopy}
+      title={`Copy ${label} date`}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 5,
+        padding: '4px 10px', borderRadius: 8, fontSize: 11, fontWeight: 600,
+        border: '1px solid var(--border)', background: flash ? 'rgba(22,163,74,0.08)' : 'var(--bg)',
+        color: flash ? '#16a34a' : 'var(--text-muted)',
+        cursor: 'pointer', transition: 'all 0.18s ease',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {flash ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" style={{ opacity: 0.5 }} />}
+      <span style={{ color: 'var(--text-faint)', fontWeight: 500, marginRight: 2 }}>{label}</span>
+      {formattedDisplay}
+    </button>
+  );
+}
+
+/* ─────────────────────────────────────────────────
+   DOC ROW — with optional expiry/validity support
+───────────────────────────────────────────────── */
+
 interface DocRowProps {
   name: string;
-  docNumber?: string;   // show Copy button only when provided
+  docNumber?: string;
   docTitle: string;
   url: string;
   onOpenDoc?: (title: string, url: string) => void;
+  /** ISO date when certificate was issued */
+  issuedDate?: string;
+  /** ISO date when certificate expires */
+  expiryDate?: string;
 }
-function DocRow({ name, docNumber, docTitle, url, onOpenDoc }: DocRowProps) {
+
+function DocRow({ name, docNumber, docTitle, url, onOpenDoc, issuedDate, expiryDate }: DocRowProps) {
+  const hasValidity = !!(issuedDate && expiryDate);
+
+  // On touch/mobile devices, always show the validity panel inline (no hover)
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsMobile(window.matchMedia('(pointer: coarse)').matches);
+    }
+  }, []);
+
+  // Hover with delay — only expand after cursor rests 500ms
+  const [expanded, setExpanded] = useState(false);
+  const hoverTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    if (!hasValidity || isMobile) return;
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    hoverTimer.current = setTimeout(() => setExpanded(true), 500);
+  };
+  const handleMouseLeave = () => {
+    if (hoverTimer.current) { clearTimeout(hoverTimer.current); hoverTimer.current = null; }
+    setExpanded(false);
+  };
+
+  const isOpen = isMobile ? hasValidity : (hasValidity && expanded);
+
+  // Compute validity
+  const validity = hasValidity ? useValidityInfo(issuedDate!, expiryDate!) : null;
+  const barColor = validity?.isNoExpiry ? '#16a34a' : (validity?.isExpired || validity?.isWarning ? '#dc2626' : '#16a34a');
+  const borderColor = isOpen ? 'var(--violet)' : 'var(--border)';
+
   return (
+    /*
+     * Outer wrapper: position:relative so the absolute panel anchors here.
+     * NO overflow:hidden — panel must escape to overlay neighbours.
+     * z-index elevates the whole unit when open.
+     */
     <div
-      style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        gap: 12, padding: '12px 14px', borderRadius: 14,
-        background: 'var(--card)', border: '1px solid var(--border)',
-        boxShadow: 'var(--shadow-sm)',
-        transition: 'transform 0.18s ease, box-shadow 0.18s ease',
-      }}
-      className="hover:shadow-md hover:border-[var(--violet-soft)]"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      style={{ position: 'relative', zIndex: isOpen ? 20 : 1 }}
     >
-      {/* Left: icon + name */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
-        <div
-          style={{
-            width: 34, height: 34, borderRadius: 9, background: 'var(--violet-soft)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-          }}
-        >
-          <FileText className="w-4 h-4" style={{ color: 'var(--violet)' }} />
-        </div>
-        <div style={{ minWidth: 0 }}>
-          <p style={{ color: 'var(--text-title)', fontSize: 13.5, fontWeight: 700, lineHeight: 1.3 }}>
-            {name}
-          </p>
-          {docNumber && (
-            <p style={{ color: 'var(--text-muted)', fontSize: 11.5, marginTop: 2, fontWeight: 500 }}>
-              {docNumber}
+      {/* ── Card header: fixed grid height, never changes ── */}
+      <div
+        style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          gap: 12, padding: '12px 14px',
+          background: 'var(--card)',
+          // When open: square bottom corners + no bottom border → merges into panel
+          borderTopLeftRadius: 14,
+          borderTopRightRadius: 14,
+          borderBottomLeftRadius: isOpen ? 0 : 14,
+          borderBottomRightRadius: isOpen ? 0 : 14,
+          borderStyle: 'solid',
+          borderColor: borderColor,
+          borderTopWidth: 1,
+          borderLeftWidth: 1,
+          borderRightWidth: 1,
+          // borderBottomWidth: isOpen ? 0 : 1,
+          boxShadow: isOpen ? 'none' : 'var(--shadow-sm)',
+          transition: 'border-color 0.22s ease, border-radius 0.22s ease, box-shadow 0.22s ease',
+        }}
+        className={!hasValidity ? 'hover:shadow-md hover:border-[var(--violet-soft)]' : ''}
+      >
+        {/* Left: icon + name */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
+          <div
+            style={{
+              width: 34, height: 34, borderRadius: 9, background: 'var(--violet-soft)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+            }}
+          >
+            <FileText className="w-4 h-4" style={{ color: 'var(--violet)' }} />
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <p style={{ color: 'var(--text-title)', fontSize: 13.5, fontWeight: 700, lineHeight: 1.3 }}>
+              {name}
             </p>
-          )}
+            {docNumber && (
+              <p style={{ color: 'var(--text-muted)', fontSize: 11.5, marginTop: 2, fontWeight: 500 }}>
+                {docNumber}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Right: Copy + View */}
+        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1.5 shrink-0">
+          {docNumber && <CopyBtn text={docNumber} title={`Copy ${name} number`} />}
+          {url && <ViewBtn title={docTitle} url={url} onOpenDoc={onOpenDoc} />}
         </div>
       </div>
 
-      {/* Right: Copy + View (Column on mobile, Row on sm+) */}
-      <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1.5 shrink-0">
-        {docNumber && <CopyBtn text={docNumber} title={`Copy ${name} number`} />}
-        {url && <ViewBtn title={docTitle} url={url} onOpenDoc={onOpenDoc} />}
+      {/*
+        ── Validity panel ──
+        Desktop: position:absolute → floats over neighbours, ZERO layout shift.
+        Mobile:  position:static  → inline below the header (always visible).
+        Both: visually continues the card — no top border, rounded only at bottom.
+      */}
+      {hasValidity && (
+        <div
+          style={{
+            position: isMobile ? 'static' : 'absolute',
+            top: isMobile ? undefined : '100%',
+            left: isMobile ? undefined : 0,
+            right: isMobile ? undefined : 0,
+            zIndex: isMobile ? undefined : 20,
+            transformOrigin: 'top',
+            transform: isOpen ? 'scaleY(1)' : 'scaleY(0)',
+            opacity: isOpen ? 1 : 0,
+            pointerEvents: isOpen ? 'auto' : 'none',
+            transition: 'transform 0.25s ease, opacity 0.22s ease',
+            borderBottomLeftRadius: 14,
+            borderBottomRightRadius: 14,
+            borderStyle: 'solid',
+            borderColor: borderColor,
+            borderBottomWidth: 1,
+            borderLeftWidth: 1,
+            borderRightWidth: 1,
+            borderTopWidth: 0,
+            background: 'var(--card)',
+            boxShadow: isMobile ? 'none' : '0 10px 30px rgba(109,40,217,0.14)',
+          }}
+        >
+          <ValidityPanel
+            issuedDate={issuedDate!}
+            expiryDate={expiryDate!}
+            validity={validity!}
+            barColor={barColor}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────
+   VALIDITY PANEL
+───────────────────────────────────────────────── */
+interface ValidityPanelProps {
+  issuedDate: string;
+  expiryDate: string;
+  validity: ReturnType<typeof useValidityInfo>;
+  barColor: string;
+}
+function ValidityPanel({ issuedDate, expiryDate, validity, barColor }: ValidityPanelProps) {
+  return (
+    <div style={{ padding: '0px 14px 14px' }}>
+      {/* Remaining time */}
+      {!validity.isNoExpiry && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 9 }}>
+          <Clock className="w-3.5 h-3.5" style={{ color: barColor, flexShrink: 0 }} />
+          <span style={{ fontSize: 12, fontWeight: 700, color: barColor }}>
+            {validity.remainingLabel}
+          </span>
+        </div>
+      )}
+
+      {/* Progress bar (hidden if NA) */}
+      {!validity.isNoExpiry && (
+        <div style={{ width: '100%', height: 6, borderRadius: 999, background: 'var(--border)', overflow: 'hidden', marginBottom: 8 }}>
+          <div
+            style={{
+              height: '100%',
+              width: `${validity.progressPct}%`,
+              borderRadius: 999,
+              background: barColor,
+              boxShadow: `0 0 6px ${barColor}55`,
+            }}
+          />
+        </div>
+      )}
+
+      {/* Date chips — click to copy */}
+      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+        <DateChip label="Issued on" dateStr={issuedDate} />
+        <DateChip label="Valid till" dateStr={expiryDate} />
       </div>
     </div>
   );
@@ -503,26 +758,36 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
           </h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
+
           <DocRow
             name="ETO COC"
             docNumber="ETO-07545"
             docTitle="COC- ETO-07545"
             url="https://drive.google.com/file/d/1eO91fNQUunawwBt7t-aHjGHhUwdz4lof/view?usp=drive_link"
             onOpenDoc={onOpenDoc}
+            issuedDate="2026-09-10"
+            expiryDate="2031-07-19"
+
           />
+
           <DocRow
             name="CDC"
             docNumber="MUM 573376"
             docTitle="CDC Document (MUM 573376)"
             url="https://drive.google.com/file/d/12yjm_1r7gl8E0--86ZasE4-cLA83BojE/view?usp=sharing"
             onOpenDoc={onOpenDoc}
+            issuedDate="2024-11-05"
+            expiryDate="2034-11-04"
           />
+
           <DocRow
             name="PASSPORT"
             docNumber="Y1684711"
             docTitle="Passport (Y1684711)"
             url="https://drive.google.com/file/d/12nlj9eG1bsJH7sAhEWoNKI2e3NZwcxdJ/view?usp=sharing"
             onOpenDoc={onOpenDoc}
+            issuedDate="2024-04-18"
+            expiryDate="2034-04-17"
           />
 
           <DocRow
@@ -539,87 +804,114 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
             docTitle="Seafarer Identity Document (M35049870)"
             url="https://drive.google.com/file/d/1B5oobNZycLJHhZTecqtF2qu6bMARiGGk/view?usp=sharing"
             onOpenDoc={onOpenDoc}
+            issuedDate="2024-12-18"
+            expiryDate="2034-12-17"
+
           />
 
           <DocRow
             name="Marlins Test (Eng)"
-
             docTitle="Marlins Test (English)"
             url="https://drive.google.com/file/d/11HZ1IPGdrvTQVMhrNPl9O0pxKjMQlAP4/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
+
           <DocRow
             name="HV MGM. Cert."
             docNumber="2010013223260272"
             docTitle="High Voltage MGM."
             url="https://drive.google.com/file/d/1Mxz9RU3sbI4OkKmQsFV4sSNdLYNvrR97/view?usp=sharing"
             onOpenDoc={onOpenDoc}
+            issuedDate="2026-07-24"
+            expiryDate="NA"
           />
+
           <DocRow
             name="MFA"
             docNumber="20100164112507813"
             docTitle="Certificate of Proficiency in Medical First Aid"
             url="https://drive.google.com/file/d/13KuTC1khFFDPrYzJ5RfRG_Fe8rvQugJC/view?usp=sharing"
             onOpenDoc={onOpenDoc}
+            issuedDate="2025-12-25"
+            expiryDate="NA"
           />
+
           <DocRow
             name="PSCRB"
             docNumber="20100162112509818"
             docTitle="Certificate of Proficiency in Survival Craft and Rescue Boat other than Fast Rescue Boat"
             url="https://drive.google.com/file/d/11ZsopuVdCuwUWticUhJkSgOui7NM2Pqj/view?usp=sharing"
             onOpenDoc={onOpenDoc}
+            issuedDate="2026-01-03"
+            expiryDate="2031-01-02"
           />
+
           <DocRow
             name="AFF"
             docNumber="20100163112600112"
             docTitle="Certificate of Proficiency in Advanced Fire Fighting"
             url="https://drive.google.com/file/d/1629TmSQ1m-u20AOakF0IlkJPMjDPuomE/view?usp=sharing"
             onOpenDoc={onOpenDoc}
+            issuedDate="2026-01-09"
+            expiryDate="NA"
           />
+
           <DocRow
             name="Basic IGF"
             docNumber="1050235311240194"
             docTitle="Basic Training for Service on Ships using Fuels Covered with IGF Code"
             url="https://drive.google.com/file/d/12lXOFf-RIkGv7OII3gQwcAvwa50-fAB8/view?usp=sharing"
             onOpenDoc={onOpenDoc}
+            issuedDate="2024-12-21"
+            expiryDate="NA"
           />
+
           <DocRow
             name="COP Basic IGF"
             docNumber="BIGFE24009111"
             docTitle="Basic Training for Service on Ships using Fuels Covered with IGF Code (Expiry:20-DEC-2029)"
             url="https://drive.google.com/file/d/15wrr2XBkc8OpFx8Nle0qIrKXwaHGglq7/view?usp=sharing"
             onOpenDoc={onOpenDoc}
+            issuedDate="2024-12-24"
+            expiryDate="2029-12-20"
           />
+
           <DocRow
             name="EFA, PST, PSSR"
             docNumber="20100561012402312"
             docTitle="Certificate of Proficiency in Personal Survival Techniques, Fire Prevention & Fire Fighting, Elementary First Aid and Personal Safety and Social Responsibilities"
             url="https://drive.google.com/file/d/12_ski8KjYyVPKed6ZK0H8FghF9YceV8O/view?usp=sharing"
             onOpenDoc={onOpenDoc}
+            issuedDate="2024-09-14"
+            expiryDate="NA"
           />
+
           <DocRow
             name="PSSR AMDT"
             docNumber="ADU-957-081256"
             docTitle="Certificate of PSSR AMENDMENT"
             url="https://drive.google.com/file/d/1-6rolIehWwMGhwH6RRFXZwVjzUr1CGGD/view?usp=sharing"
             onOpenDoc={onOpenDoc}
+            issuedDate="2025-12-19"
+            expiryDate="NA"
           />
+
           <DocRow
             name="STSDSD"
             docNumber="20100566212403212"
             docTitle="Certificate of Proficiency in Security Training for Seafarers with Designated Security Duties"
             url="https://drive.google.com/file/d/12WQUJEBGIoKylwQ48Gvqf716Xo1AM8OB/view?usp=sharing"
             onOpenDoc={onOpenDoc}
+            issuedDate="2024-10-09"
+            expiryDate="NA"
           />
+
           <DocRow
             name="SAGAR MEIN YOG"
-
             docTitle="Certificates of SAGAR MEIN YOG"
             url="https://drive.google.com/file/d/1YZ0VQqyX5WQHMXO5OemSa0AlD3Hbli36/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
-
-
 
         </div>
       </div>
