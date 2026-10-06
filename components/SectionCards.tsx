@@ -534,13 +534,13 @@ function DateChip({ label, dateStr }: { label: string; dateStr: string }) {
         display: 'inline-flex', alignItems: 'center', gap: 5,
         padding: '4px 10px', borderRadius: 8, fontSize: 11, fontWeight: 600,
         border: '1px solid var(--border)', background: flash ? 'rgba(22,163,74,0.08)' : 'var(--bg)',
-        color: flash ? '#16a34a' : 'var(--text-muted)',
+        color: flash ? '#16a34a' : 'var(--text-title)',
         cursor: 'pointer', transition: 'all 0.18s ease',
         whiteSpace: 'nowrap',
       }}
     >
       {flash ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" style={{ opacity: 0.5 }} />}
-      <span style={{ color: 'var(--text-faint)', fontWeight: 500, marginRight: 2 }}>{label}</span>
+      <span style={{ color: flash ? '#16a34a' : 'var(--text-title)', fontWeight: 600, marginRight: 2 }}>{label}</span>
       {formattedDisplay}
     </button>
   );
