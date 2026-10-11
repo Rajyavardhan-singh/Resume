@@ -17,8 +17,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Rajyavardhan Singh Rathore | Electro-Technical Officer & Full-Stack Developer',
-  description: 'Portfolio & CV of Rajyavardhan Singh Rathore.',
+  title: 'Electro-Technical Officer | Rajyavardhan Singh Rathore ',
+  description: 'Portfolio & CV ',
   keywords: [
     'Rajyavardhan Singh Rathore',
     'Electro-Technical Officer',
