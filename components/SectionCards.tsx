@@ -5,7 +5,7 @@ import {
   Ship, Zap, Terminal, Rocket, Compass, Globe,
   BookOpen, Calendar, Award,
   ChevronRight, FileText, ExternalLink,
-  FolderOpen, Eye, Copy, Check, Clock
+  FolderOpen, Eye, Copy, Check, Clock, Download
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import {
@@ -745,124 +745,181 @@ function ValidityPanel({ issuedDate, expiryDate, validity, barColor }: ValidityP
   );
 }
 
+/* ─────────────────────────────────────────────────
+   DOWNLOAD ALL BUTTON
+───────────────────────────────────────────────── */
+function DownloadAllBtn({ zipUrl, color }: { zipUrl: string; color: string }) {
+  return (
+    <a
+      href={zipUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 5,
+        padding: '5px 14px',
+        borderRadius: 999,
+        fontSize: 12,
+        fontWeight: 700,
+        background: color,
+        color: '#fff',
+        border: 'none',
+        cursor: 'pointer',
+        textDecoration: 'none',
+        boxShadow: `0 2px 10px ${color}55`,
+        transition: 'all 0.18s ease',
+        flexShrink: 0,
+        whiteSpace: 'nowrap',
+      }}
+      className="hover:opacity-85 hover:scale-105"
+    >
+      <Download className="w-3.5 h-3.5" />
+      Download All
+    </a>
+  );
+}
+
+/* ─────────────────────────────────────────────────
+   SECTION HEADER with Download All
+───────────────────────────────────────────────── */
+function DocSectionHeader({
+  label,
+  dotColor,
+  zipUrl,
+}: {
+  label: string;
+  dotColor: string;
+  zipUrl: string;
+}) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 12,
+        flexWrap: 'wrap',
+        paddingBottom: 12,
+        borderBottom: '1px solid var(--border)',
+        marginBottom: 16,
+      }}
+    >
+      <div
+        style={{
+          width: 11,
+          height: 11,
+          borderRadius: '50%',
+          background: dotColor,
+          flexShrink: 0,
+        }}
+      />
+      <h3
+        style={{
+          color: 'var(--text-title)',
+          fontSize: 13,
+          fontWeight: 800,
+          textTransform: 'uppercase',
+          letterSpacing: '0.07em',
+          margin: 0,
+        }}
+      >
+        {label}
+      </h3>
+      <DownloadAllBtn zipUrl={zipUrl} color={dotColor} />
+    </div>
+  );
+}
+
 export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
   return (
     <div className="p-4 sm:p-7 flex flex-col gap-7 overflow-y-auto h-full">
 
-      {/* ── Section 1: Maritime Statutory Documents ── */}
+      {/* ── Section 1: Identity & Travel Documents ── */}
       <div>
-        <div className="flex items-center gap-2.5 pb-3 border-b border-[var(--border)] mb-4">
-          <div className="w-3 h-3 rounded-full bg-[var(--violet)] shrink-0" />
-          <h3 style={{ color: 'var(--text-title)', fontSize: 13, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-            Maritime Statutory Documents
-          </h3>
-        </div>
+        <DocSectionHeader
+          label="Identity & Travel Documents"
+          dotColor="#16a34a"
+          zipUrl="https://drive.google.com/uc?export=download&id=1F0u3aWHW23ezxchorsRjl6uvOJ7PlxqM"
+        />
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
-
-          <DocRow
-            name="ETO COC"
-            docNumber="ETO-07545"
-            docTitle="COC- ETO-07545"
-            url="https://drive.google.com/file/d/1eO91fNQUunawwBt7t-aHjGHhUwdz4lof/view?usp=drive_link"
-            onOpenDoc={onOpenDoc}
-            issuedDate="2026-09-10"
-            expiryDate="2031-07-19"
-
-          />
-
-          <DocRow
-            name="CDC"
-            docNumber="MUM 573376"
-            docTitle="CDC Document (MUM 573376)"
-            url="https://drive.google.com/file/d/12yjm_1r7gl8E0--86ZasE4-cLA83BojE/view?usp=sharing"
-            onOpenDoc={onOpenDoc}
-            issuedDate="2024-11-05"
-            expiryDate="2034-11-04"
-          />
 
           <DocRow
             name="PASSPORT"
             docNumber="Y1684711"
-            docTitle="Passport (Y1684711)"
-            url="https://drive.google.com/file/d/12nlj9eG1bsJH7sAhEWoNKI2e3NZwcxdJ/view?usp=sharing"
+            docTitle="PASSPORT (Y1684711)"
+            url="https://drive.google.com/file/d/1IJ7g1Le4218a-HLAMk3w8gsc3rMFJ4qz/view?usp=sharing"
             onOpenDoc={onOpenDoc}
             issuedDate="2024-04-18"
             expiryDate="2034-04-17"
           />
 
           <DocRow
-            name="INDOS"
-            docNumber="24EM1741"
-            docTitle="INDOS Certificate (24EM1741)"
-            url="https://drive.google.com/file/d/166XYju8u71Pra0NF_l6tae69sr-Np89m/view?usp=sharing"
+            name="CDC"
+            docNumber="MUM 573376"
+            docTitle="CDC Document (MUM 573376)"
+            url="https://drive.google.com/file/d/1JXRFgZ5S4-Szu7f_eTcFZNUGrAQ-2kyT/view?usp=sharing"
             onOpenDoc={onOpenDoc}
+            issuedDate="2024-11-05"
+            expiryDate="2034-11-04"
           />
 
           <DocRow
-            name="SID CARD"
+            name="SID Card"
             docNumber="M35049870"
             docTitle="Seafarer Identity Document (M35049870)"
-            url="https://drive.google.com/file/d/1B5oobNZycLJHhZTecqtF2qu6bMARiGGk/view?usp=sharing"
+            url="https://drive.google.com/file/d/1YkSPTzhYRZjMr2rthjgE8XUh0vx131bD/view?usp=sharing"
             onOpenDoc={onOpenDoc}
             issuedDate="2024-12-18"
             expiryDate="2034-12-17"
-
           />
 
           <DocRow
-            name="Marlins Test (English)"
-            docTitle="Marlins Test (English)"
-            url="https://drive.google.com/file/d/11HZ1IPGdrvTQVMhrNPl9O0pxKjMQlAP4/view?usp=sharing"
+            name="C1/D USA VISA"
+            docNumber="20260309940024"
+            docTitle="C1/D USA VISA"
+            url="https://drive.google.com/file/d/1voFRAoQarmwrzvIxXX6BO0UMLAI0e1To/view?usp=sharing"
             onOpenDoc={onOpenDoc}
+            issuedDate="2026-02-04"
+            expiryDate="2031-01-29"
+          />
+
+          <DocRow
+            name="INDOS No."
+            docNumber="24EM1741"
+            docTitle="INDOS Certificate (24EM1741)"
+            url="https://drive.google.com/file/d/1hBSb6hd0GXKaMdKFnV-xNLk4UDzftYe8/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+
+        </div>
+      </div>
+
+      {/* ── Section 2: STCW & Course Certificates ── */}
+      <div>
+        <DocSectionHeader
+          label="STCW & Course Certificates"
+          dotColor="#d97706"
+          zipUrl="https://drive.google.com/uc?export=download&id=1n8v9_LFGEhmNXhE_E_1eIPJ4-oSlqIlE"
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
+
+          <DocRow
+            name="ETO COC"
+            docNumber="ETO-07545"
+            docTitle="STCW III/6 COC- ETO-07545"
+            url="https://drive.google.com/file/d/1vzH2Pspf5jDcCnXQfe1PZhdUN0V4ERXH/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+            issuedDate="2026-09-10"
+            expiryDate="2031-07-19"
           />
 
           <DocRow
             name="HV MGM. Cert."
             docNumber="2010013223260272"
             docTitle="High Voltage MGM."
-            url="https://drive.google.com/file/d/1Mxz9RU3sbI4OkKmQsFV4sSNdLYNvrR97/view?usp=sharing"
+            url="https://drive.google.com/file/d/1KMPMX5d3kRMcbBejiTp68o6dXO84RIIc/view?usp=sharing"
             onOpenDoc={onOpenDoc}
             issuedDate="2026-07-24"
-            expiryDate="NA"
-          />
-
-          <DocRow
-            name="MFA"
-            docNumber="20100164112507813"
-            docTitle="Certificate of Proficiency in Medical First Aid"
-            url="https://drive.google.com/file/d/13KuTC1khFFDPrYzJ5RfRG_Fe8rvQugJC/view?usp=sharing"
-            onOpenDoc={onOpenDoc}
-            issuedDate="2025-12-25"
-            expiryDate="NA"
-          />
-
-          <DocRow
-            name="PSCRB"
-            docNumber="20100162112509818"
-            docTitle="Certificate of Proficiency in Survival Craft and Rescue Boat other than Fast Rescue Boat"
-            url="https://drive.google.com/file/d/11ZsopuVdCuwUWticUhJkSgOui7NM2Pqj/view?usp=sharing"
-            onOpenDoc={onOpenDoc}
-            issuedDate="2026-01-03"
-            expiryDate="2031-01-02"
-          />
-
-          <DocRow
-            name="AFF"
-            docNumber="20100163112600112"
-            docTitle="Certificate of Proficiency in Advanced Fire Fighting"
-            url="https://drive.google.com/file/d/1629TmSQ1m-u20AOakF0IlkJPMjDPuomE/view?usp=sharing"
-            onOpenDoc={onOpenDoc}
-            issuedDate="2026-01-09"
-            expiryDate="NA"
-          />
-
-          <DocRow
-            name="Basic IGF"
-            docNumber="1050235311240194"
-            docTitle="Basic Training for Service on Ships using Fuels Covered with IGF Code"
-            url="https://drive.google.com/file/d/12lXOFf-RIkGv7OII3gQwcAvwa50-fAB8/view?usp=sharing"
-            onOpenDoc={onOpenDoc}
-            issuedDate="2024-12-21"
             expiryDate="NA"
           />
 
@@ -870,27 +927,71 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
             name="COP Basic IGF"
             docNumber="BIGFE24009111"
             docTitle="Basic Training for Service on Ships using Fuels Covered with IGF Code (Expiry:20-DEC-2029)"
-            url="https://drive.google.com/file/d/15wrr2XBkc8OpFx8Nle0qIrKXwaHGglq7/view?usp=sharing"
+            url="https://drive.google.com/file/d/1zmvdzOOGAna4Hf1FqbI21L_dRbs4A5Wm/view?usp=sharing"
             onOpenDoc={onOpenDoc}
             issuedDate="2024-12-24"
             expiryDate="2029-12-20"
           />
 
+
           <DocRow
-            name="EFA, PST, PSSR"
+            name="Basic IGF"
+            docNumber="1050235311240194"
+            docTitle="Basic Training for Service on Ships using Fuels Covered with IGF Code"
+            url="https://drive.google.com/file/d/1kFdnwXA--BSzX7d--a6h30WPG1MFS2vN/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+            issuedDate="2024-12-21"
+            expiryDate="NA"
+          />
+
+          <DocRow
+            name="PSCRB"
+            docNumber="20100162112509818"
+            docTitle="Certificate of Proficiency in Survival Craft and Rescue Boat other than Fast Rescue Boat"
+            url="https://drive.google.com/file/d/1caGLxJbmhlrwqfKpzPhdbRsCkSyG_MiU/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+            issuedDate="2026-01-03"
+            expiryDate="2031-01-02"
+          />
+
+          <DocRow
+            name="MFA"
+            docNumber="20100164112507813"
+            docTitle="Certificate of Proficiency in Medical First Aid"
+            url="https://drive.google.com/file/d/1lbE2-aJJRH9vY2D3t-HFbvEzQtVCJ5bN/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+            issuedDate="2025-12-25"
+            expiryDate="NA"
+          />
+
+          <DocRow
+            name="AFF"
+            docNumber="20100163112600112"
+            docTitle="Certificate of Proficiency in Advanced Fire Fighting"
+            url="https://drive.google.com/file/d/1gPrS-9Tmpv5rPq95DIs2VCwM2yswDoSM/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+            issuedDate="2026-01-09"
+            expiryDate="NA"
+          />
+
+
+
+
+          <DocRow
+            name="EFA,PST,PSSR,FPFF"
             docNumber="20100561012402312"
             docTitle="Certificate of Proficiency in Personal Survival Techniques, Fire Prevention & Fire Fighting, Elementary First Aid and Personal Safety and Social Responsibilities"
-            url="https://drive.google.com/file/d/12_ski8KjYyVPKed6ZK0H8FghF9YceV8O/view?usp=sharing"
+            url="https://drive.google.com/file/d/1i7k31iS6KFX2ukIy13QVzwftzfk8Vcit/view?usp=sharing"
             onOpenDoc={onOpenDoc}
             issuedDate="2024-09-14"
             expiryDate="NA"
           />
 
           <DocRow
-            name="PSSR AMDT"
+            name="PSSR AMDT 2026"
             docNumber="ADU-957-081256"
             docTitle="Certificate of PSSR AMENDMENT"
-            url="https://drive.google.com/file/d/1-6rolIehWwMGhwH6RRFXZwVjzUr1CGGD/view?usp=sharing"
+            url="https://drive.google.com/file/d/1hsFUb76Wa74vpm0NZGqc-3aSWKmbplVG/view?usp=sharing"
             onOpenDoc={onOpenDoc}
             issuedDate="2025-12-19"
             expiryDate="NA"
@@ -900,64 +1001,93 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
             name="STSDSD"
             docNumber="20100566212403212"
             docTitle="Certificate of Proficiency in Security Training for Seafarers with Designated Security Duties"
-            url="https://drive.google.com/file/d/12WQUJEBGIoKylwQ48Gvqf716Xo1AM8OB/view?usp=sharing"
+            url="https://drive.google.com/file/d/1KPJ5Bn8oqXM8WXdgkF6BbQnxqUCBiw7t/view?usp=sharing"
             onOpenDoc={onOpenDoc}
             issuedDate="2024-10-09"
             expiryDate="NA"
           />
 
+
+          <DocRow
+            name="CROWD & CRISIS "
+            docNumber="AIMS/PCCM/10/1413/2026"
+            docTitle="PASSENGER SHIP SAFETY (CROWD & CRISIS MANAGEMENT)"
+            url="https://drive.google.com/file/d/1JebI4QMoSUlUoG7HITc7cMN524wTj2Jo/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+            issuedDate="2026-10-19"
+            expiryDate="2031-10-18"
+          />
+
+          <DocRow
+            name="Marlins Test (English)"
+            docTitle="Marlins Test (English)"
+            url="https://drive.google.com/file/d/1BScew99QifvJbJ_RaYiUTPWkb2FXjOup/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+          />
+
           <DocRow
             name="SAGAR MEIN YOG"
             docTitle="Certificates of SAGAR MEIN YOG"
-            url="https://drive.google.com/file/d/1YZ0VQqyX5WQHMXO5OemSa0AlD3Hbli36/view?usp=sharing"
+            url="https://drive.google.com/file/d/1kUpYYdY1zs9yZmRC0x8u11-RAjnoW89X/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
 
         </div>
       </div>
 
-      {/* ── Section 2: Education ── */}
+      {/* ── Section 3: Health Records & Certificates ── */}
       <div>
-        <div className="flex items-center gap-2.5 pb-3 border-b border-[var(--border)] mb-4">
-          <div className="w-3 h-3 rounded-full bg-[var(--coral)] shrink-0" />
-          <h3 style={{ color: 'var(--text-title)', fontSize: 13, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-            Education
-          </h3>
-        </div>
+        <DocSectionHeader
+          label="Health Records & Certificates"
+          dotColor="#ea580c"
+          zipUrl="https://drive.google.com/uc?export=download&id=16xfVi7DE76BoEw2Yre0b-Fu1kkheJ-Pj"
+        />
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
-          {educationList.filter(e => e.docUrl).map((edu, i) => (
-            <DocRow
-              key={i}
-              name={`${edu.program} `}
-              docTitle={`${edu.program} - Document`}
-              url={edu.docUrl!}
-              onOpenDoc={onOpenDoc}
-            />
-          ))}
+
+          <DocRow
+            name="COVID 19 - VACC."
+            docNumber="82312743324"
+            docTitle="COVID-19 Vaccination Certificate"
+            url="https://drive.google.com/file/d/1wkxwKFkSih7BHQqa2QWK1Utjr3JUYd2q/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+            issuedDate="2021-08-18"
+            expiryDate="NA"
+          />
+
+          <DocRow
+            name="YELLOW FEVER"
+            docNumber="YFVC/007/APD/2024014235"
+            docTitle="YELLOW FEVER VACCINATION CERTIFICATE"
+            url="https://drive.google.com/file/d/1bJp63arBZjf38kvGP8T72xs5wiuiNWPO/view?usp=sharing"
+            onOpenDoc={onOpenDoc}
+            issuedDate="2024-12-23"
+            expiryDate="NA"
+          />
+
         </div>
       </div>
 
-      {/* ── Section 3: Experience ── */}
+      {/* ── Section 5: Experience ── */}
       <div>
         <div className="flex items-center gap-2.5 pb-3 border-b border-[var(--border)] mb-4">
-          <div className="w-3 h-3 rounded-full" style={{ background: '#f59e0b' }} />
+          <div className="w-3 h-3 rounded-full shrink-0" style={{ background: 'var(--violet)' }} />
           <h3 style={{ color: 'var(--text-title)', fontSize: 13, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em' }}>
             Experience
           </h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
           <DocRow
-            name="MSC ROME – Sea Service Certificate"
-            docTitle="MSC ROME - Sea Service Document"
-            url="https://drive.google.com/file/d/1xTCxtZmr-tiGnOl1pETR7T4NuKCQVqky/view?usp=sharing"
+            name="MSC ROME – Appraisal & Sea Service Certificate"
+            docTitle="MSC ROME - Appraisal and Sea Service Document"
+            url="https://drive.google.com/file/d/1FETSRGpNo7yUlsSs4rr44bvJiAWeZ6PG/view?usp=sharing"
             onOpenDoc={onOpenDoc}
           />
-          <DocRow
+          {/* <DocRow
             name="MSC ROME – Appraisal Report"
             docTitle="MSC ROME - Appraisal Report"
             url="https://drive.google.com/file/d/13rAKUgK2nZRpn8O3vRONzIACUXzuI2nq/view?usp=sharing"
             onOpenDoc={onOpenDoc}
-          />
+          /> */}
           {onShoreExperience.filter(e => e.docUrl).map((exp, i) => (
             <DocRow
               key={`onshore-${i}`}
@@ -970,7 +1100,7 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
           {internships.filter(e => e.docUrl).map((intern, i) => (
             <DocRow
               key={`intern-${i}`}
-              name={`${'Internship'}`}
+              name={'Internship'}
               docTitle={`${intern.company} - Document`}
               url={intern.docUrl!}
               onOpenDoc={onOpenDoc}
@@ -978,6 +1108,29 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
           ))}
         </div>
       </div>
+
+      {/* ── Section 4: Education ── */}
+      <div>
+        <div className="flex items-center gap-2.5 pb-3 border-b border-[var(--border)] mb-4">
+          <div className="w-3 h-3 rounded-full shrink-0" style={{ background: '#2563eb' }} />
+          <h3 style={{ color: 'var(--text-title)', fontSize: 13, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+            Education
+          </h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
+          {educationList.filter(e => e.docUrl).map((edu, i) => (
+            <DocRow
+              key={i}
+              name={`${edu.program}`}
+              docTitle={`${edu.program} - Document`}
+              url={edu.docUrl!}
+              onOpenDoc={onOpenDoc}
+            />
+          ))}
+        </div>
+      </div>
+
+
 
     </div>
   );
@@ -1012,7 +1165,7 @@ export const CARDS = [
     id: 'documents' as SectionId,
     icon: FolderOpen,
     title: 'Documents',
-    tagline: 'All certificates & records in one place',
+    tagline: 'All certificates & records',
     stubAccent: 'coral' as const,
   },
 ];

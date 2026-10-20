@@ -96,7 +96,7 @@ export const onShoreExperience: OnShoreExperience[] = [
     period: "01-Aug-2022 – 27-Feb-2023",
     description: "Served as Technical Consultant & Developer supporting enterprise IT learning systems and developing software features.",
     skillsUsed: ["Full Stack Development", "Java", "JavaScript (ES6)", "Computer Networking", "Technical Consulting"],
-    docUrl: "https://drive.google.com/file/d/1ZqBY6y8SP_h441uY1_ZsEG0vkrYASobm/view?usp=sharing"
+    docUrl: "https://drive.google.com/file/d/1ZCa6aov4iOLolqXccjl4Nqq7irF5giuI/view?usp=sharing"
   }
 ];
 
@@ -106,7 +106,7 @@ export const internships: Internship[] = [
     period: "July 2021",
     role: "Electrical Engineering Intern",
     description: "Gained hands-on experience in electrical switchgear assembly, testing, industrial panel wiring, and control circuits.",
-    docUrl: "https://drive.google.com/file/d/1-a9I2xzbXn_ArdYguaL8x3YYgcb12QsY/view?usp=sharing"
+    docUrl: "https://drive.google.com/file/d/1Emgs_qSaFUVv1K-72VIxe7BYJnQ9nQjP/view?usp=sharing"
   }
 ];
 
@@ -117,7 +117,7 @@ export const educationList: Education[] = [
     period: "Aug – Dec 2024",
     details: "Batch Ref: TMI/ETO/24-2/26 | Comprehensive pre-sea training for Electro-Technical Officers as per STCW standards.",
     badge: "Pre-Sea ETO",
-    docUrl: "https://drive.google.com/file/d/104EC5a8ptcrMPfqZudUK3n1mdbolbVqd/view?usp=drive_link"
+    docUrl: "https://drive.google.com/file/d/1rwJkBBlMuhlBwkI1MHv5zvk1EkPorL0a/view?usp=sharing"
   },
   {
     institution: "GOVT. ENGINEERING COLLEGE (UJJAIN) M.P.",
@@ -125,7 +125,7 @@ export const educationList: Education[] = [
     period: "Graduated July 2022",
     details: "Specialized in High Voltage Electrical Systems, Power Electronics, Electrical Machines & Control Engineering.",
     badge: "B.Tech Degree",
-    docUrl: "https://drive.google.com/file/d/1xJyi8n99Rj62SMwUM2shlcvNbzegyDfZ/view?usp=sharing"
+    docUrl: "https://drive.google.com/file/d/1ak6NLTM93s__1G5PHCwnb8gBVn17BcPn/view?usp=sharing"
   }
 ];
 
