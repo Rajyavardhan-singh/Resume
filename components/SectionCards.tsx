@@ -907,7 +907,7 @@ export function DocumentsExpanded({ onOpenDoc }: ExpandedProps) {
             name="ETO COC"
             docNumber="ETO-07545"
             docTitle="STCW III/6 COC- ETO-07545"
-            url="https://drive.google.com/file/d/1vzH2Pspf5jDcCnXQfe1PZhdUN0V4ERXH/view?usp=sharing"
+            url="https://drive.google.com/file/d/19ThhpOC3Ocj97EFF6n85-ZxTtBUy5rr3/view?usp=sharing"
             onOpenDoc={onOpenDoc}
             issuedDate="2026-09-10"
             expiryDate="2031-07-19"
